@@ -73,29 +73,6 @@ The app will open on your connected Android device or emulator.
    - View critical medical information in large text
    - Tap to call emergency contacts
 
-## 🏗️ Project Structure
-
-```
-SafeSol/
-├── app/                    # Screens (file-based routing)
-│   ├── index.tsx           # Home screen
-│   ├── medical.tsx         # Medical info form
-│   ├── kyc.tsx             # KYC verification
-│   └── qr.tsx              # QR generation
-├── components/             # Reusable UI components
-│   ├── Header.tsx          # App header with wallet
-│   ├── StatusCard.tsx      # Home screen cards
-│   ├── Toast.tsx           # Toast notifications
-│   └── WalletButton.tsx    # Connect/disconnect button
-├── constants/              # App constants
-│   └── colors.ts           # Color scheme
-├── utils/                  # Helper functions
-│   └── storage.ts          # AsyncStorage helpers
-├── types/                  # TypeScript types
-│   └── index.ts            # Shared types
-└── assets/                 # Images, fonts
-```
-
 ## 🔒 Privacy First
 
 - ✅ All medical data stored **encrypted on your device only**
