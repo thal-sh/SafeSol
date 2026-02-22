@@ -3,9 +3,11 @@ import React, { useState, useEffect } from 'react'
 import { Text, View, ScrollView, Pressable, RefreshControl } from 'react-native'
 import { useMobileWallet } from '@wallet-ui/react-native-kit'
 import { router } from 'expo-router'
+import { LinearGradient } from 'expo-linear-gradient'
 import { WalletButton } from '../components/WalletButton'
 import { Header } from '../components/Header'
 import { StatusCard } from '../components/StatusCard'
+import { PixelIcon } from '../components/PixelIcon'
 import { storage } from '../utils/storage'
 import { colors } from '../constants/colors'
 import Toast from 'react-native-toast-message'
@@ -45,203 +47,281 @@ export default function Home() {
     if (!medicalData) return null
     
     const items = []
-    if (medicalData.allergies) items.push(`🌿 Allergies: ${medicalData.allergies}`)
-    if (medicalData.bloodType) items.push(`🩸 Blood: ${medicalData.bloodType}`)
-    if (medicalData.conditions?.length) items.push(`🏥 ${medicalData.conditions.length} conditions`)
-    if (medicalData.emergencyContacts?.length) items.push(`📞 ${medicalData.emergencyContacts.length} contacts`)
+    if (medicalData.allergies) items.push(`🌿 ALLERGIES: ${medicalData.allergies}`)
+    if (medicalData.bloodType) items.push(`🩸 BLOOD: ${medicalData.bloodType}`)
+    if (medicalData.conditions?.length) items.push(`🏥 ${medicalData.conditions.length} CONDITIONS`)
+    if (medicalData.emergencyContacts?.length) items.push(`📞 ${medicalData.emergencyContacts.length} CONTACTS`)
     
-    return items.slice(0, 2).join(' • ')
+    return items.slice(0, 2).join('  •  ')
   }
 
   if (!account) {
     return (
-      <View className={`flex-1 ${colors.primary.bg} items-center justify-center px-8`}>
-        <Text className={`text-4xl font-extrabold ${colors.primary.text} mb-3 tracking-tight`}>
-          SafeSol
+      <LinearGradient
+        colors={['#0a0a1f', '#1a0f2e', '#000000']}
+        className="flex-1 items-center justify-center px-8"
+      >
+        <Text 
+          style={{ fontFamily: 'PressStart2P_400Regular' }} 
+          className="text-4xl text-[#ffd9b3] mb-3 text-center"
+        >
+          SAFESOL
         </Text>
-        <Text className={`text-xl ${colors.primary.subtext} mb-8 text-center leading-relaxed`}>
-          Your secure medical ID on Solana Mobile
+        <Text 
+          style={{ fontFamily: 'PressStart2P_400Regular' }} 
+          className="text-sm text-[#b39eb5] mb-8 text-center leading-6"
+        >
+          YOUR SECURE MEDICAL ID{'\n'}ON SOLANA MOBILE
         </Text>
         
         {/* Feature preview for non-connected users */}
-        <View className="w-full mb-8">
-          <View className="flex-row items-center mb-3">
+        <View className="w-full mb-8 border-2 border-[#6a0dad] p-4">
+          <View className="flex-row items-center mb-4">
             <Text className="text-2xl mr-3">🏥</Text>
-            <Text className={`${colors.primary.subtext} flex-1`}>Store medical info securely</Text>
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[10px] flex-1">
+              STORE MEDICAL INFO SECURELY
+            </Text>
           </View>
-          <View className="flex-row items-center mb-3">
+          <View className="flex-row items-center mb-4">
             <Text className="text-2xl mr-3">✅</Text>
-            <Text className={`${colors.primary.subtext} flex-1`}>Verify your identity</Text>
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[10px] flex-1">
+              VERIFY YOUR IDENTITY
+            </Text>
           </View>
-          <View className="flex-row items-center mb-3">
+          <View className="flex-row items-center mb-4">
             <Text className="text-2xl mr-3">🚑</Text>
-            <Text className={`${colors.primary.subtext} flex-1`}>Emergency QR for first responders</Text>
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[10px] flex-1">
+              EMERGENCY QR FOR FIRST RESPONDERS
+            </Text>
           </View>
         </View>
         
         <WalletButton />
         <StatusBar style="auto" />
-      </View>
+      </LinearGradient>
     )
   }
 
   return (
-    <View className={`flex-1 ${colors.primary.bg}`}>
-      <Header address={account.address.toString()} />
-      
-      <ScrollView 
-        className="flex-1 px-6 pt-6"
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {/* Welcome Section with Stats */}
-        <View className="mb-6">
-          <Text className={`text-3xl font-bold ${colors.primary.text} mb-1`}>
-            Welcome back
+    <LinearGradient
+      colors={['#0a0a1f', '#1a0f2e', '#000000']}
+      className="flex-1"
+    >
+      <View className="flex-1">
+        <Header address={account.address.toString()} />
+        
+        <ScrollView 
+          className="flex-1 px-4 pt-4 pb-2"
+          refreshControl={
+            <RefreshControl 
+              refreshing={refreshing} 
+              onRefresh={onRefresh} 
+              tintColor="#ff6f61"
+              colors={['#ff6f61']}
+            />
+          }
+        >
+          {/* Welcome Section with Stats */}
+          <View className="mb-4">
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-base mb-1">
+              WELCOME BACK
+            </Text>
+            <View className="flex-row items-center">
+              <View className={`w-1.5 h-1.5 ${kycVerified ? 'bg-[#00ff9d]' : 'bg-[#ff6f61]'} mr-2`} />
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px]">
+                {kycVerified ? 'IDENTITY VERIFIED' : 'VERIFICATION PENDING'}
+              </Text>
+            </View>
+          </View>
+
+          {/* Quick Stats Cards - Pixel Style */}
+          <View className="flex-row mb-6">
+            <View className="flex-1 border-2 border-[#6a0dad] p-3 mr-1">
+              <Text className="text-2xl mb-1">🏥</Text>
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-xs">
+                {savedMedical ? 'ACTIVE' : 'NOT SET'}
+              </Text>
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[6px] mt-1">
+                MEDICAL
+              </Text>
+            </View>
+            
+            <View className="flex-1 border-2 border-[#6a0dad] p-3 mx-1">
+              <Text className="text-2xl mb-1">✅</Text>
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-xs">
+                {kycVerified ? 'VERIFIED' : 'PENDING'}
+              </Text>
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[6px] mt-1">
+                KYC
+              </Text>
+            </View>
+            
+            <View className="flex-1 border-2 border-[#6a0dad] p-3 ml-1">
+              <Text className="text-2xl mb-1">📱</Text>
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-xs">
+                {savedMedical ? 'READY' : 'LOCKED'}
+              </Text>
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[6px] mt-1">
+                QR
+              </Text>
+            </View>
+          </View>
+
+          {/* Medical Summary (if data exists) */}
+          {savedMedical && medicalData && (
+            <Pressable 
+              onPress={() => router.push('/medical')}
+              className="mb-6 border-2 border-[#00ff9d] p-3"
+              style={{ shadowColor: '#00ff9d', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.3, shadowRadius: 8 }}
+            >
+              <View className="flex-row justify-between items-center mb-2">
+                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-[10px]">
+                  MEDICAL SUMMARY
+                </Text>
+                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px]">
+                  EDIT →
+                </Text>
+              </View>
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] leading-4">
+                {getMedicalSummary() || 'NO MEDICAL DATA'}
+              </Text>
+              {medicalData.lastUpdated && (
+                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#4a2c5a] text-[6px] mt-2">
+                  UPDATED: {new Date(medicalData.lastUpdated).toLocaleDateString().toUpperCase()}
+                </Text>
+              )}
+            </Pressable>
+          )}
+
+          {/* Main Action Cards */}
+          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-xs mb-3">
+            QUICK ACTIONS
           </Text>
-          <View className="flex-row items-center">
-            <View className={`h-2 w-2 rounded-full ${kycVerified ? 'bg-green-500' : 'bg-yellow-500'} mr-2`} />
-            <Text className={`${colors.primary.subtext}`}>
-              {kycVerified ? 'Identity verified' : 'Verification pending'}
-            </Text>
-          </View>
-        </View>
-
-        {/* Quick Stats Cards */}
-        <View className="flex-row mb-6">
-          <View className="flex-1 bg-blue-50 dark:bg-blue-900/30 p-4 rounded-xl mr-2">
-            <Text className="text-2xl mb-1">🏥</Text>
-            <Text className="text-blue-600 dark:text-blue-400 text-lg font-bold">
-              {savedMedical ? 'Active' : 'Not set'}
-            </Text>
-            <Text className="text-xs text-gray-600 dark:text-gray-400">Medical</Text>
-          </View>
           
-          <View className="flex-1 bg-green-50 dark:bg-green-900/30 p-4 rounded-xl mx-2">
-            <Text className="text-2xl mb-1">✅</Text>
-            <Text className="text-green-600 dark:text-green-400 text-lg font-bold">
-              {kycVerified ? 'Verified' : 'Pending'}
-            </Text>
-            <Text className="text-xs text-gray-600 dark:text-gray-400">KYC</Text>
-          </View>
-          
-          <View className="flex-1 bg-purple-50 dark:bg-purple-900/30 p-4 rounded-xl ml-2">
-            <Text className="text-2xl mb-1">📱</Text>
-            <Text className="text-purple-600 dark:text-purple-400 text-lg font-bold">
-              {savedMedical ? 'Ready' : 'Locked'}
-            </Text>
-            <Text className="text-xs text-gray-600 dark:text-gray-400">QR</Text>
-          </View>
-        </View>
+          <StatusCard
+            title="MEDICAL INFO"
+            description={savedMedical 
+              ? medicalData?.bloodType 
+                ? `BLOOD: ${medicalData.bloodType}  •  ${medicalData.emergencyContacts?.length || 0} CONTACTS`
+                : 'YOUR MEDICAL INFO IS STORED'
+              : 'ADD ALLERGIES, BLOOD TYPE, AND EMERGENCY CONTACTS'}
+            status={savedMedical ? 'saved' : 'not set'}
+            isComplete={savedMedical}
+            onPress={() => router.push('/medical')}
+            actionText={savedMedical ? "UPDATE →" : "SET UP NOW →"}
+          />
 
-        {/* Medical Summary (if data exists) */}
-        {savedMedical && medicalData && (
+          <StatusCard
+            title="KYC VERIFICATION"
+            description={kycVerified 
+              ? 'IDENTITY VERIFIED • NO DATA STORED'
+              : 'VERIFY YOUR IDENTITY ONCE'}
+            status={kycVerified ? 'verified' : 'pending'}
+            isComplete={kycVerified}
+            onPress={() => router.push('/kyc')}
+            actionText={kycVerified ? "VIEW STATUS →" : "VERIFY NOW →"}
+          />
+
+          <StatusCard
+            title="EMERGENCY QR"
+            description={savedMedical 
+              ? 'GENERATE QR FOR FIRST RESPONDERS'
+              : 'COMPLETE MEDICAL INFO FIRST'}
+            status={savedMedical ? 'ready' : 'locked'}
+            isComplete={savedMedical}
+            onPress={() => {
+              if (savedMedical) {
+                router.push('/qr')
+              } else {
+                Toast.show({
+                  type: 'info',
+                  text1: 'MEDICAL INFO REQUIRED',
+                  text2: 'PLEASE ADD YOUR MEDICAL INFORMATION FIRST',
+                  position: 'top',
+                  visibilityTime: 3000,
+                })
+              }
+            }}
+            actionText={savedMedical ? "GENERATE →" : "COMPLETE MEDICAL FIRST"}
+          />
+
+          {/* Quick Tips Section - Pixel Style */}
+          <View className="border-2 border-[#8a2be2] p-3 mt-4 mb-8">
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[10px] mb-2">
+              💡 QUICK TIPS
+            </Text>
+            <View>
+              {!savedMedical && (
+                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mb-2">
+                  • ADD MEDICAL INFO TO ENABLE QR
+                </Text>
+              )}
+              {savedMedical && !kycVerified && (
+                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mb-2">
+                  • VERIFY IDENTITY TO BUILD TRUST
+                </Text>
+              )}
+              {savedMedical && kycVerified && (
+                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mb-2">
+                  • QR READY FOR LOCK SCREEN
+                </Text>
+              )}
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px]">
+                • ALL DATA ENCRYPTED ON DEVICE
+              </Text>
+            </View>
+          </View>
+
+          {/* Extra space for bottom nav */}
+          <View className="h-20" />
+        </ScrollView>
+
+        {/* Bottom Navigation Bar */}
+        <View className="bg-[#0a0a1f] border-t-2 border-[#6a0dad] flex-row justify-around py-3">
           <Pressable 
             onPress={() => router.push('/medical')}
-            className="bg-gray-50 dark:bg-gray-900 p-4 rounded-xl mb-6 border border-gray-200 dark:border-gray-800"
+            className="items-center active:opacity-50"
           >
-            <View className="flex-row justify-between items-center mb-2">
-              <Text className={`font-bold ${colors.primary.text}`}>Medical Summary</Text>
-              <Text className="text-blue-600 text-sm">Edit →</Text>
-            </View>
-            <Text className={`${colors.primary.subtext}`}>
-              {getMedicalSummary() || 'No medical data entered'}
+            <PixelIcon name="heart" color="#ff6f61" size={20} />
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mt-1">
+              MEDICAL
             </Text>
-            {medicalData.lastUpdated && (
-              <Text className="text-xs text-gray-400 mt-2">
-                Updated: {new Date(medicalData.lastUpdated).toLocaleDateString()}
-              </Text>
-            )}
           </Pressable>
-        )}
-
-        {/* Main Action Cards */}
-        <Text className={`text-lg font-bold ${colors.primary.text} mb-3`}>
-          Quick Actions
-        </Text>
-        
-        <StatusCard
-          title="Medical Info"
-          description={savedMedical 
-            ? medicalData?.bloodType 
-              ? `Blood: ${medicalData.bloodType} • ${medicalData.emergencyContacts?.length || 0} contacts`
-              : 'Your medical information is stored securely'
-            : 'Add allergies, blood type, and emergency contacts'}
-          status={savedMedical ? 'saved' : 'not set'}
-          isComplete={savedMedical}
-          onPress={() => router.push('/medical')}
-          actionText={savedMedical ? "Update →" : "Set up now →"}
-        />
-
-        <StatusCard
-          title="KYC Verification"
-          description={kycVerified 
-            ? 'Your identity is verified. No personal data stored.'
-            : 'Verify your identity once to unlock all features'}
-          status={kycVerified ? 'verified' : 'pending'}
-          isComplete={kycVerified}
-          onPress={() => router.push('/kyc')}
-          actionText={kycVerified ? "View status →" : "Verify now →"}
-        />
-
-        <StatusCard
-          title="Emergency QR"
-          description={savedMedical 
-            ? 'Generate QR code for first responders'
-            : 'Complete medical info first to enable QR'}
-          status={savedMedical ? 'ready' : 'locked'}
-          isComplete={savedMedical}
-          onPress={() => {
-            if (savedMedical) {
-              router.push('/qr')
-            } else {
-              Toast.show({
-                type: 'info',
-                text1: 'Medical Info Required',
-                text2: 'Please add your medical information first',
-                position: 'top',
-                visibilityTime: 3000,
-              })
-            }
-          }}
-          actionText={savedMedical ? "Generate →" : "Complete medical first"}
-        />
-
-        {/* Quick Tips Section */}
-        <View className="bg-yellow-50 dark:bg-yellow-900/30 p-4 rounded-xl mt-4 mb-8">
-          <Text className="text-yellow-800 dark:text-yellow-200 font-bold mb-2">
-            💡 Quick Tips
-          </Text>
-          <View className="space-y-2">
-            {!savedMedical && (
-              <Text className="text-yellow-700 dark:text-yellow-300 text-sm">
-                • Add medical info to enable emergency QR
-              </Text>
-            )}
-            {savedMedical && !kycVerified && (
-              <Text className="text-yellow-700 dark:text-yellow-300 text-sm">
-                • Verify your identity to build trust
-              </Text>
-            )}
-            {savedMedical && kycVerified && (
-              <Text className="text-yellow-700 dark:text-yellow-300 text-sm">
-                • Your emergency QR is ready for lock screen
-              </Text>
-            )}
-            <Text className="text-yellow-700 dark:text-yellow-300 text-sm">
-              • All data stays encrypted on your device
+          
+          <Pressable 
+            onPress={() => router.push('/kyc')}
+            className="items-center active:opacity-50"
+          >
+            <PixelIcon name="shield" color="#8a2be2" size={20} />
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mt-1">
+              KYC
             </Text>
-          </View>
-        </View>
+          </Pressable>
+          
+          <Pressable 
+            onPress={() => savedMedical ? router.push('/qr') : null}
+            className="items-center active:opacity-50"
+          >
+            <PixelIcon name="qr" color={savedMedical ? '#00ff9d' : '#4a2c5a'} size={20} />
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mt-1">
+              QR
+            </Text>
+          </Pressable>
 
-        {/* Disconnect Button */}
-        <View className="mb-12">
-          <WalletButton />
+          <Pressable className="items-center active:opacity-50">
+            <View className="w-5 h-5 border border-[#ff6f61] items-center justify-center">
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px]">
+                ?
+              </Text>
+            </View>
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mt-1">
+              HELP
+            </Text>
+          </Pressable>
         </View>
-      </ScrollView>
+      </View>
 
       <StatusBar style="auto" />
-    </View>
+    </LinearGradient>
   )
 }

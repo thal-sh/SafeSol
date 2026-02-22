@@ -1,5 +1,5 @@
-import React from 'react'
 import { Text, View } from 'react-native'
+import { LinearGradient } from 'expo-linear-gradient'
 import { colors } from '../constants/colors'
 
 type Props = {
@@ -8,15 +8,20 @@ type Props = {
 
 export function Header({ address }: Props) {
   return (
-    <View className="pt-12 pb-4 px-8 border-b border-gray-200 dark:border-gray-800">
+    <LinearGradient
+      colors={['#1a0f2e', '#0a0a1f']}
+      className="pt-12 pb-4 px-6 border-b-2 border-[#6a0dad]"
+    >
       <View className="flex-row justify-between items-center">
-        <Text className={`text-2xl font-bold ${colors.primary.text}`}>SafeSol</Text>
-        <Text className={`${colors.primary.subtext} text-xs`}>
-          {address.slice(0, 8)}...
+        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-lg">
+          SAFESOL
         </Text>
+        <View className="border border-[#8a2be2] px-3 py-1">
+          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px]">
+            {address.slice(0, 4)}...{address.slice(-4)}
+          </Text>
+        </View>
       </View>
-    </View>
+    </LinearGradient>
   )
 }
-
-export default Header
