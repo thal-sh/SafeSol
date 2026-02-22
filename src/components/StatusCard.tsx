@@ -1,6 +1,5 @@
 import { Pressable, Text, View } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
-import { colors } from '../constants/colors'
 
 type Props = {
   title: string
@@ -17,26 +16,30 @@ export function StatusCard({ title, description, status, isComplete, onPress, ac
       case 'saved':
       case 'verified':
       case 'ready':
-        return 'border-[#00ff9d]'
+        return {
+          border: 'border-[#00ff9d]',
+          text: 'text-[#00ff9d]',
+          bg: 'bg-[#00ff9d]',
+          glow: '#00ff9d'
+        }
       case 'pending':
-        return 'border-[#ff6f61]'
-      default:
-        return 'border-[#4a2c5a]'
+        return {
+          border: 'border-[#ff6f61]',
+          text: 'text-[#ff6f61]',
+          bg: 'bg-[#ff6f61]',
+          glow: '#ff6f61'
+        }
+      default: // 'not set', 'locked'
+        return {
+          border: 'border-[#8a2be2]',
+          text: 'text-[#8a2be2]',
+          bg: 'bg-[#8a2be2]',
+          glow: '#8a2be2'
+        }
     }
   }
 
-  const getGlowColor = () => {
-    switch (status) {
-      case 'saved':
-      case 'verified':
-      case 'ready':
-        return '#00ff9d'
-      case 'pending':
-        return '#ff6f61'
-      default:
-        return '#4a2c5a'
-    }
-  }
+  const colors = getStatusColor()
 
   return (
     <Pressable 
@@ -45,23 +48,28 @@ export function StatusCard({ title, description, status, isComplete, onPress, ac
     >
       <LinearGradient
         colors={['#1a0f2e', '#0f0a1f']}
-        className={`p-5 border-2 ${getStatusColor()}`}
-        style={{ shadowColor: getGlowColor(), shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.3, shadowRadius: 8 }}
+        className={`p-5 border-2 ${colors.border}`}
+        style={{ shadowColor: colors.glow, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.5, shadowRadius: 10 }}
       >
         <View className="flex-row justify-between items-center mb-3">
           <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-sm">
             {title}
           </Text>
-          <View className={`px-2 py-1 border ${getStatusColor()}`}>
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className={`text-[8px] ${getStatusColor().replace('border-', 'text-')}`}>
-              {status.toUpperCase()}
+          <View className={`px-2 py-1 border ${colors.border}`}>
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className={`text-[8px] ${colors.text}`}>
+              {status === 'saved' ? '✓ SAVED' : 
+               status === 'verified' ? '✓ VERIFIED' :
+               status === 'ready' ? '⚡ READY' :
+               status === 'pending' ? '⏳ WAIT' :
+               status === 'not set' ? '○ NEW' :
+               status === 'locked' ? '🔒 LOCKED' : status}
             </Text>
           </View>
         </View>
         <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[10px] mb-4 leading-4">
           {description}
         </Text>
-        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[10px]">
+        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className={`${colors.text} text-[10px]`}>
           {actionText}
         </Text>
       </LinearGradient>
