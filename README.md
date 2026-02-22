@@ -25,16 +25,6 @@ A privacy-first medical ID and identity verification app built for Solana Mobile
 - Lock screen setup instructions
 - Works without unlocking phone
 
-### 🌙 Dark Mode
-- Full dark mode support
-- Matches system preferences
-
-## 📱 Screenshots
-
-| Home | Medical | KYC | QR | Emergency |
-|------|---------|-----|-----|-----------|
-| Dashboard | Add medical info | Verify identity | Generate QR | Paramedic view |
-
 ## 🚀 Getting Started
 
 ### Installation & Setup
