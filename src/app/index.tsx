@@ -134,8 +134,7 @@ export default function Home() {
             </View>
           </View>
 
-          {/* Quick Stats Cards - Pixel Style */}
-          <View className="flex-row mb-6">
+                   <View className="flex-row mb-6">
             <View className="flex-1 border-2 border-[#6a0dad] p-3 mr-1">
               <Text className="text-2xl mb-1">🏥</Text>
               <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-xs">
@@ -212,7 +211,7 @@ export default function Home() {
           />
 
           <StatusCard
-            title="KYC VERIFICATION"
+            title="KYC VERIF."
             description={kycVerified 
               ? 'IDENTITY VERIFIED • NO DATA STORED'
               : 'VERIFY YOUR IDENTITY ONCE'}
