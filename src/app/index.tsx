@@ -149,7 +149,7 @@ export default function Home() {
             <View className="flex-1 border-2 border-[#6a0dad] p-3 mx-1">
               <Text className="text-2xl mb-1">✅</Text>
               <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-xs">
-                {kycVerified ? 'VERIFIED' : 'PENDING'}
+                {kycVerified ? 'VERIFIED' : 'PENDIN'}
               </Text>
               <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[6px] mt-1">
                 KYC
