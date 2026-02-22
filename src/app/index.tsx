@@ -8,6 +8,7 @@ import { Header } from '../../src/components/Header'
 import { StatusCard } from '../../src/components/StatusCard'
 import { storage } from '../../src/utils/storage'
 import { colors } from '../../src/constants/colors'
+import Toast from 'react-native-toast-message'
 
 export default function Home() {
   const { account } = useMobileWallet()
@@ -58,37 +59,49 @@ export default function Home() {
         </Text>
         
         <StatusCard
-          title="Medical Info"
-          description={savedMedical 
-            ? 'Your medical information is stored securely'
-            : 'Add allergies, blood type, and emergency contacts'}
-          status={savedMedical ? 'saved' : 'not set'}
-          isComplete={savedMedical}
-          onPress={() => router.push('/medical')}
-          actionText="Update →"
-        />
+  title="Medical Info"
+  description={savedMedical 
+    ? 'Your medical information is stored securely'
+    : 'Add allergies, blood type, and emergency contacts'}
+  status={savedMedical ? 'saved' : 'not set'}
+  isComplete={savedMedical}
+  onPress={() => router.push('/medical')}
+  actionText="Update →"
+/>
 
-        <StatusCard
-          title="KYC Verification"
-          description={kycVerified 
-            ? 'Your identity is verified'
-            : 'Verify your identity once'}
-          status={kycVerified ? 'verified' : 'pending'}
-          isComplete={kycVerified}
-          onPress={() => router.push('/kyc')}
-          actionText="View status →"
-        />
+<StatusCard
+  title="KYC Verification"
+  description={kycVerified 
+    ? 'Your identity is verified'
+    : 'Verify your identity once'}
+  status={kycVerified ? 'verified' : 'pending'}
+  isComplete={kycVerified}
+  onPress={() => router.push('/kyc')}
+  actionText="View status →"
+/>
 
-        <StatusCard
-          title="Emergency QR"
-          description={savedMedical 
-            ? 'Generate QR for first responders'
-            : 'Complete medical info first'}
-          status={savedMedical ? 'ready' : 'locked'}
-          isComplete={savedMedical}
-          onPress={() => savedMedical && router.push('/qr')}
-          actionText="Generate →"
-        />
+<StatusCard
+  title="Emergency QR"
+  description={savedMedical 
+    ? 'Generate QR for first responders'
+    : 'Complete medical info first'}
+  status={savedMedical ? 'ready' : 'locked'}
+  isComplete={savedMedical}
+  onPress={() => {
+    if (savedMedical) {
+      router.push('/qr')
+    } else {
+      Toast.show({
+        type: 'info',
+        text1: 'Medical Info Required',
+        text2: 'Please complete medical information first',
+        position: 'top',
+        visibilityTime: 3000,
+      })
+    }
+  }}
+  actionText="Generate →"
+/>
 
         <View className="mb-12">
           <WalletButton />
