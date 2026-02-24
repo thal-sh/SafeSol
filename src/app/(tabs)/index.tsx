@@ -286,50 +286,7 @@ export default function Home() {
           {/* Extra space for bottom nav */}
           <View className="h-20" />
         </ScrollView>
-
-        {/* Bottom Navigation Bar */}
-        <View className="bg-[#0a0a1f] border-t-2 border-[#6a0dad] flex-row justify-around py-3">
-          <Pressable
-            onPress={() => router.push('/medical')}
-            className="items-center active:opacity-50"
-          >
-            <PixelIcon name="heart" color="#ff6f61" size={20} />
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mt-1">
-              MEDICAL
-            </Text>
-          </Pressable>
-
-          <Pressable
-            onPress={() => router.push('/kyc')}
-            className="items-center active:opacity-50"
-          >
-            <PixelIcon name="shield" color="#8a2be2" size={20} />
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mt-1">
-              KYC
-            </Text>
-          </Pressable>
-
-          <Pressable
-            onPress={() => savedMedical ? router.push('/qr') : null}
-            className="items-center active:opacity-50"
-          >
-            <PixelIcon name="qr" color={savedMedical ? '#00ff9d' : '#4a2c5a'} size={20} />
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mt-1">
-              QR
-            </Text>
-          </Pressable>
-
-          <Pressable className="items-center active:opacity-50">
-            <View className="w-5 h-5 border border-[#ff6f61] items-center justify-center">
-              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px]">
-                ?
-              </Text>
-            </View>
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mt-1">
-              HELP
-            </Text>
-          </Pressable>
-        </View>
+        
       </View>
 
       <StatusBar style="auto" />
