@@ -1,29 +1,66 @@
 # SafeSol 🔐
 
-A privacy-first medical ID and identity verification app built for Solana Mobile. Store your critical medical information securely on your device and access it instantly in emergencies.
+A privacy-first LIFE DATA VAULT app built for Solana Mobile. Store your critical medical, finance, property and identity information securely on your device and access it instantly in emergencies.
 
-## ✨ Features
-
-### 🏥 Medical Information
+### 🏥 **HEALTH VAULT**
 - Store allergies, blood type, and medical conditions
-- Add multiple emergency contacts with phone numbers
-- Track condition severity (mild/moderate/severe)
-- Encrypted storage on your device only
-- Last updated timestamps
+- Multiple emergency contacts with phone numbers
+- Condition severity tracking (mild/moderate/severe)
+- Medication reminders & prescriptions
+- Vaccination records
+- Insurance cards (encrypted)
+- Doctor visit history
 
-### ✅ KYC Verification
-- Upload ID documents (passport, driver's license)
-- Take selfie for verification
-- Simulated verification flow for demo
-- Privacy-first: no data permanently stored
-- Clear status tracking (pending/submitted/verified/rejected)
+### 💼 **FINANCIAL VAULT**
+- Income proofs from employers (ZK-ready)
+- Employment contracts
+- Loan agreements
+- Investment proofs
+- Tax records
+- Multi-employment history
+- Gig economy earnings (Uber, etc.)
 
-### 🚑 Emergency QR
-- Generate QR code with your medical data
+### 🏠 **PROPERTY VAULT**
+- Rental history with landlord verification
+- Lease agreements
+- Owned property deeds
+- Rent payment proofs ("12 months paid")
+- Utility bills
+- Maintenance requests
+- HOA documents
+
+### 🆔 **IDENTITY VAULT**
+- KYC verification status
+- Age proofs (over 18/21/65) without revealing DOB
+- Nationality/residency
+- Professional licenses
+- University degrees
+- Memberships & certifications
+
+### 📜 **DOCUMENTS VAULT**
+- Passport (encrypted)
+- Driver's license
+- Birth certificate
+- Marriage certificate
+- Diplomas & transcripts
+- Certificates
+
+### 🚑 **EMERGENCY QR**
+- Generate QR with medical data
 - Paramedic mode with large, readable text
 - One-tap calling to emergency contacts
 - Lock screen setup instructions
 - Works without unlocking phone
+
+### 🔐 **VERIFIABLE PROOFS**
+- Employers can issue income attestations
+- Landlords can verify rental history
+- Zero-knowledge proofs (simulated for demo)
+- Prove "Income > $5,000" without revealing actual salary
+- Prove "Rent paid 12 months" without sharing bank statements
+- All proofs stored on YOUR device only
+
+---
 
 ## 🚀 Getting Started
 
