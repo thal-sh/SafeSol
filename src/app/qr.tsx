@@ -3,11 +3,11 @@ import { Text, View, ScrollView, Pressable, Share, Linking } from 'react-native'
 import { router } from 'expo-router'
 import { useMobileWallet } from '@wallet-ui/react-native-kit'
 import { StatusBar } from 'expo-status-bar'
+import { LinearGradient } from 'expo-linear-gradient'
 import QRCode from 'react-native-qrcode-svg'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Toast from 'react-native-toast-message'
 import { Header } from '../components/Header'
-import { colors } from '../constants/colors'
 
 type MedicalInfo = {
   allergies: string
@@ -71,23 +71,22 @@ export default function QRScreen() {
 
   const saveQRToPhone = async () => {
     try {
-      // For iOS/Android, we can share the QR code
       await Share.share({
-        message: 'SafeSol Emergency QR Code - Save to your photos',
+        message: '🔐 SAFESOL EMERGENCY QR CODE',
         title: 'Emergency QR Code',
       })
       Toast.show({
         type: 'success',
-        text1: 'Success',
-        text2: 'Take a screenshot to save as lock screen',
+        text1: 'SUCCESS',
+        text2: 'SAVE SCREENSHOT AS LOCK SCREEN',
         position: 'top',
         visibilityTime: 3000,
       })
     } catch (error) {
       Toast.show({
         type: 'error',
-        text1: 'Error',
-        text2: 'Failed to share QR code',
+        text1: 'ERROR',
+        text2: 'FAILED TO SHARE QR',
         position: 'top',
         visibilityTime: 3000,
       })
@@ -100,162 +99,201 @@ export default function QRScreen() {
 
   if (!account) {
     return (
-      <View className={`flex-1 ${colors.primary.bg} items-center justify-center`}>
-        <Text className={colors.primary.text}>Please connect wallet</Text>
-      </View>
+      <LinearGradient colors={['#0a0a1f', '#1a0f2e', '#000000']} className="flex-1 items-center justify-center">
+        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-xs">
+          CONNECT WALLET
+        </Text>
+      </LinearGradient>
     )
   }
 
   if (showParamedic && medicalInfo) {
-    // PARAMEDIC VIEW - Large, red, easy to read
+    // PARAMEDIC VIEW - Cyberpunk Emergency Mode
     return (
-      <View className="flex-1 bg-red-900">
-        <ScrollView className="flex-1 px-6 pt-12">
+      <LinearGradient colors={['#2a0a0a', '#1a0a0a', '#0a0a0a']} className="flex-1">
+        <ScrollView className="flex-1 px-4 pt-12">
           <Pressable 
             onPress={() => setShowParamedic(false)}
-            className="absolute top-12 right-6 z-10 bg-red-800 px-4 py-2 rounded-lg"
+            className="absolute top-12 right-4 z-10 border-2 border-[#ff6f61] px-3 py-2"
+            style={{ shadowColor: '#ff6f61', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.5, shadowRadius: 10 }}
           >
-            <Text className="text-white font-bold">Exit Emergency Mode</Text>
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px]">
+              EXIT
+            </Text>
           </Pressable>
 
-          <Text className="text-white text-4xl font-bold mb-2 mt-8">🚑 EMERGENCY</Text>
-          <Text className="text-red-200 text-lg mb-8">Medical information verified on Solana</Text>
+          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-2xl mb-2 mt-8">
+            🚑 EMERGENCY
+          </Text>
+          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mb-8">
+            VERIFIED ON SOLANA
+          </Text>
           
           {/* Allergies - Most Critical */}
-          <View className="bg-red-800 p-6 rounded-xl mb-4 border-2 border-white">
-            <Text className="text-white text-lg opacity-80 mb-1">ALLERGIES</Text>
-            <Text className="text-white text-3xl font-bold">
-              {medicalInfo.allergies || 'None recorded'}
+          <View className="border-4 border-[#ff6f61] p-4 mb-4" style={{ shadowColor: '#ff6f61', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.5, shadowRadius: 15 }}>
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[10px] mb-2">
+              ALLERGIES
+            </Text>
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-xl">
+              {medicalInfo.allergies || 'NONE RECORDED'}
             </Text>
           </View>
 
           {/* Blood Type */}
-          <View className="bg-red-800 p-6 rounded-xl mb-4">
-            <Text className="text-white text-lg opacity-80 mb-1">BLOOD TYPE</Text>
-            <Text className="text-white text-5xl font-bold">
-              {medicalInfo.bloodType || 'Unknown'}
+          <View className="border-2 border-[#00ff9d] p-4 mb-4">
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[10px] mb-2">
+              BLOOD TYPE
+            </Text>
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#00ff9d] text-3xl">
+              {medicalInfo.bloodType || 'UNKNOWN'}
             </Text>
           </View>
 
           {/* Medical Conditions */}
-          <View className="bg-red-800 p-6 rounded-xl mb-4">
-            <Text className="text-white text-lg opacity-80 mb-2">MEDICAL CONDITIONS</Text>
+          <View className="border-2 border-[#8a2be2] p-4 mb-4">
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[10px] mb-3">
+              CONDITIONS
+            </Text>
             {medicalInfo.conditions.length > 0 ? (
               medicalInfo.conditions.map((condition, index) => (
                 <View key={index} className="flex-row items-center mb-2">
-                  <Text className="text-white text-xl font-bold">• {condition.name}</Text>
-                  <View className={`ml-3 px-2 py-1 rounded-full ${
-                    condition.severity === 'severe' ? 'bg-red-600' :
-                    condition.severity === 'moderate' ? 'bg-yellow-600' : 'bg-green-600'
+                  <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-xs flex-1">
+                    • {condition.name}
+                  </Text>
+                  <View className={`border-2 px-2 py-1 ${
+                    condition.severity === 'severe' ? 'border-[#ff6f61]' :
+                    condition.severity === 'moderate' ? 'border-[#ffb86b]' : 'border-[#00ff9d]'
                   }`}>
-                    <Text className="text-white text-xs">{condition.severity}</Text>
+                    <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className={`text-[6px] ${
+                      condition.severity === 'severe' ? 'text-[#ff6f61]' :
+                      condition.severity === 'moderate' ? 'text-[#ffb86b]' : 'text-[#00ff9d]'
+                    }`}>
+                      {condition.severity.toUpperCase()}
+                    </Text>
                   </View>
                 </View>
               ))
             ) : (
-              <Text className="text-white text-xl">None recorded</Text>
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-xs">
+                NONE RECORDED
+              </Text>
             )}
           </View>
 
           {/* Emergency Contacts */}
-          <View className="bg-red-800 p-6 rounded-xl mb-8">
-            <Text className="text-white text-lg opacity-80 mb-3">EMERGENCY CONTACTS</Text>
+          <View className="border-2 border-[#ff6f61] p-4 mb-8">
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[10px] mb-3">
+              CONTACTS
+            </Text>
             {medicalInfo.emergencyContacts.map((contact, index) => (
               <Pressable
                 key={index}
                 onPress={() => callEmergencyContact(contact.phone)}
-                className="mb-3 p-3 bg-red-700 rounded-lg active:bg-red-600"
+                className="mb-3 border border-[#ff6f61] p-3 active:opacity-50"
               >
-                <Text className="text-white font-bold text-lg">{contact.name}</Text>
-                <Text className="text-white text-base">{contact.relationship}</Text>
-                <Text className="text-white text-xl mt-1">{contact.phone}</Text>
+                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-xs">
+                  {contact.name}
+                </Text>
+                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[6px] mt-1">
+                  {contact.relationship}
+                </Text>
+                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-xs mt-2">
+                  {contact.phone}
+                </Text>
               </Pressable>
             ))}
           </View>
 
-          <Text className="text-white text-center text-sm mb-8 opacity-60">
-            Data verified on Solana • Emergency access
+          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#4a2c5a] text-[6px] text-center mb-8">
+            DATA VERIFIED ON SOLANA • EMERGENCY ACCESS
           </Text>
         </ScrollView>
-      </View>
+      </LinearGradient>
     )
   }
 
   // QR CODE VIEW
   return (
-    <View className={`flex-1 ${colors.primary.bg}`}>
+    <LinearGradient colors={['#0a0a1f', '#1a0f2e', '#000000']} className="flex-1">
       <Header address={account.address.toString()} />
       
-      <ScrollView className="flex-1 px-6 pt-6">
-        <Text className={`text-2xl font-bold ${colors.primary.text} mb-2`}>
-          Emergency QR Code
+      <ScrollView className="flex-1 px-4 pt-4">
+        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-lg mb-1">
+          📱 EMERGENCY QR
         </Text>
-        <Text className={`${colors.primary.subtext} mb-6`}>
-          First responders can scan this from your lock screen
+        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mb-6">
+          FIRST RESPONDERS SCAN FROM LOCK SCREEN
         </Text>
 
         {isLoading ? (
           <View className="items-center py-8">
-            <Text className={colors.primary.text}>Loading...</Text>
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-xs">
+              LOADING...
+            </Text>
           </View>
         ) : !medicalInfo ? (
           // No medical data
-          <View className="bg-yellow-50 dark:bg-yellow-900/30 p-6 rounded-xl items-center">
+          <View className="border-2 border-[#ff6f61] p-6 items-center">
             <Text className="text-4xl mb-3">⚠️</Text>
-            <Text className={`text-lg font-bold ${colors.primary.text} mb-2 text-center`}>
-              No Medical Information Found
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-xs mb-2 text-center">
+              NO MEDICAL DATA FOUND
             </Text>
-            <Text className={`${colors.primary.subtext} text-center mb-4`}>
-              Please add your medical information first to generate an emergency QR code.
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] text-center mb-4">
+              ADD MEDICAL INFO FIRST TO GENERATE QR
             </Text>
             <Pressable 
               onPress={() => router.push('/medical')}
-              className="bg-blue-600 px-6 py-3 rounded-xl active:bg-blue-700"
+              className="border-2 border-[#ff6f61] px-4 py-2"
             >
-              <Text className="text-white font-bold">Go to Medical Screen</Text>
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px]">
+                GO TO MEDICAL →
+              </Text>
             </Pressable>
           </View>
         ) : (
           // Has medical data - show QR
           <>
             <View className="items-center mb-6">
-              <View className="bg-white p-4 rounded-xl shadow-lg mb-4">
+              <View className="bg-white p-4 border-2 border-[#00ff9d] mb-4">
                 <QRCode
                   value={generateQRData()}
-                  size={250}
+                  size={200}
                 />
               </View>
               
               <Pressable 
                 onPress={saveQRToPhone}
-                className="bg-blue-600 px-6 py-3 rounded-xl active:bg-blue-700 mb-4"
+                className="border-2 border-[#ff6f61] px-4 py-3 mb-4"
+                style={{ shadowColor: '#ff6f61', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.5, shadowRadius: 10 }}
               >
-                <Text className="text-white font-bold">Save QR Code</Text>
+                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-xs">
+                  SAVE QR CODE
+                </Text>
               </Pressable>
             </View>
 
             {/* Lock Screen Instructions */}
-            <View className="bg-blue-50 dark:bg-blue-900/30 p-5 rounded-xl mb-6">
-              <Text className={`font-bold ${colors.primary.text} mb-3 text-lg`}>
-                📱 Set as Lock Screen
+            <View className="border-2 border-[#8a2be2] p-4 mb-6">
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-xs mb-3">
+                📱 SET AS LOCK SCREEN
               </Text>
-              <View className="space-y-3">
-                <View className="flex-row items-center">
-                  <Text className="text-blue-600 dark:text-blue-400 text-lg mr-3">1.</Text>
-                  <Text className={`flex-1 ${colors.primary.subtext}`}>
-                    Take a screenshot of the QR code above
+              <View>
+                <View className="flex-row mb-2">
+                  <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px] mr-2">1.</Text>
+                  <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] flex-1">
+                    TAKE SCREENSHOT
                   </Text>
                 </View>
-                <View className="flex-row items-center">
-                  <Text className="text-blue-600 dark:text-blue-400 text-lg mr-3">2.</Text>
-                  <Text className={`flex-1 ${colors.primary.subtext}`}>
-                    Go to Settings → Wallpaper → Choose New Wallpaper
+                <View className="flex-row mb-2">
+                  <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px] mr-2">2.</Text>
+                  <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] flex-1">
+                    SETTINGS → WALLPAPER
                   </Text>
                 </View>
-                <View className="flex-row items-center">
-                  <Text className="text-blue-600 dark:text-blue-400 text-lg mr-3">3.</Text>
-                  <Text className={`flex-1 ${colors.primary.subtext}`}>
-                    Select the screenshot and set as Lock Screen
+                <View className="flex-row">
+                  <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px] mr-2">3.</Text>
+                  <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] flex-1">
+                    SELECT SCREENSHOT AS LOCK SCREEN
                   </Text>
                 </View>
               </View>
@@ -264,33 +302,34 @@ export default function QRScreen() {
             {/* Emergency Mode Button */}
             <Pressable 
               onPress={() => setShowParamedic(true)}
-              className="bg-red-600 py-4 rounded-xl active:bg-red-700 mb-4"
+              className="border-2 border-[#ff6f61] p-4 mb-4"
+              style={{ shadowColor: '#ff6f61', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.5, shadowRadius: 15 }}
             >
-              <Text className="text-white font-bold text-lg text-center">
-                🚑 Emergency Mode (Demo)
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-xs text-center">
+                🚑 EMERGENCY MODE
               </Text>
             </Pressable>
 
             {/* Data Summary */}
-            <View className="bg-gray-50 dark:bg-gray-900 p-4 rounded-xl mb-8">
-              <Text className={`font-bold ${colors.primary.text} mb-2`}>
-                Included in QR:
+            <View className="border-2 border-[#00ff9d] p-4 mb-8">
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-xs mb-2">
+                QR INCLUDES:
               </Text>
-              <Text className={colors.primary.subtext}>
-                • Allergies: {medicalInfo.allergies || 'None'}
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px]">
+                • ALLERGIES: {medicalInfo.allergies || 'NONE'}
               </Text>
-              <Text className={colors.primary.subtext}>
-                • Blood Type: {medicalInfo.bloodType || 'Unknown'}
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mt-1">
+                • BLOOD: {medicalInfo.bloodType || 'UNKNOWN'}
               </Text>
-              <Text className={colors.primary.subtext}>
-                • Conditions: {medicalInfo.conditions.length}
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mt-1">
+                • CONDITIONS: {medicalInfo.conditions.length}
               </Text>
-              <Text className={colors.primary.subtext}>
-                • Emergency Contacts: {medicalInfo.emergencyContacts.length}
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mt-1">
+                • CONTACTS: {medicalInfo.emergencyContacts.length}
               </Text>
               {medicalInfo.lastUpdated && (
-                <Text className="text-xs text-gray-400 mt-2">
-                  Last updated: {new Date(medicalInfo.lastUpdated).toLocaleDateString()}
+                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#4a2c5a] text-[6px] mt-2">
+                  UPDATED: {new Date(medicalInfo.lastUpdated).toLocaleDateString().toUpperCase()}
                 </Text>
               )}
             </View>
@@ -299,6 +338,6 @@ export default function QRScreen() {
       </ScrollView>
 
       <StatusBar style="auto" />
-    </View>
+    </LinearGradient>
   )
 }
