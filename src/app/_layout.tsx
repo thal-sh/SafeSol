@@ -1,5 +1,5 @@
 import '../global.css'
-import { Slot } from 'expo-router'
+import { Stack } from 'expo-router'
 import { MobileWalletProvider, createSolanaDevnet } from '@wallet-ui/react-native-kit'
 import Toast from 'react-native-toast-message'
 import { toastConfig } from '../components/Toast'
@@ -10,10 +10,10 @@ import { LinearGradient } from 'expo-linear-gradient'
 const cluster = createSolanaDevnet()
 const identity = {
   name: 'SafeSol',
-  uri: 'https://github.com/yourusername/SafeSol',
+  uri: 'https://github.com/thal-sh/SafeSol',
 }
 
-export default function Layout() {
+export default function RootLayout() {
   let [fontsLoaded] = useFonts({
     PressStart2P_400Regular,
   })
@@ -24,14 +24,23 @@ export default function Layout() {
         colors={['#0a0a1f', '#1a0f2e', '#000000']}
         style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
       >
-        <Text style={{ color: '#ffd9b3', fontSize: 16 }}>LOADING...</Text>
+        <Text style={{ fontFamily: 'PressStart2P_400Regular', color: '#ffd9b3' }}>LOADING...</Text>
       </LinearGradient>
     )
   }
 
   return (
     <MobileWalletProvider cluster={cluster} identity={identity}>
-      <Slot />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="medical" />
+        <Stack.Screen name="kyc" />
+        <Stack.Screen name="qr" />
+        <Stack.Screen name="attestations/issue" />
+        <Stack.Screen name="attestations/receive" />
+        <Stack.Screen name="attestations/verify" />
+        <Stack.Screen name="emergency" />
+      </Stack>
       <Toast config={toastConfig} />
     </MobileWalletProvider>
   )
