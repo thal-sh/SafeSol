@@ -4,10 +4,10 @@ import { router } from 'expo-router'
 import { useMobileWallet } from '@wallet-ui/react-native-kit'
 import { StatusBar } from 'expo-status-bar'
 import { Picker } from '@react-native-picker/picker'
+import { LinearGradient } from 'expo-linear-gradient'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Toast from 'react-native-toast-message'
 import { Header } from '../components/Header'
-import { colors } from '../constants/colors'
 
 // Types
 type Condition = {
@@ -53,30 +53,25 @@ export default function MedicalScreen() {
     try {
       const encrypted = await AsyncStorage.getItem(`medical_${account.address.toString()}`)
       
-      // If no data exists yet, just return (first time user)
       if (!encrypted) {
         console.log('No medical data found - first time user')
         return
       }
       
-      // Try to decrypt
       try {
         const decoded = atob(encrypted)
         const data = JSON.parse(decoded)
         setMedicalInfo(data)
         
         Toast.show({
-          type: 'info',
-          text1: 'Loaded',
-          text2: 'Your medical information has been loaded',
+          type: 'success',
+          text1: 'LOADED',
+          text2: 'MEDICAL INFO LOADED',
           position: 'top',
           visibilityTime: 2000,
         })
       } catch (decryptError) {
-        // If decryption fails, data might be corrupted
         console.log('Could not decrypt existing data')
-        // Optionally clear corrupted data:
-        // await AsyncStorage.removeItem(`medical_${account.address.toString()}`)
       }
     } catch (error) {
       console.log('Error loading medical data')
@@ -86,7 +81,7 @@ export default function MedicalScreen() {
   const showError = (message: string) => {
     Toast.show({
       type: 'error',
-      text1: 'Error',
+      text1: 'ERROR',
       text2: message,
       position: 'top',
       visibilityTime: 3000,
@@ -96,7 +91,7 @@ export default function MedicalScreen() {
   const showSuccess = (message: string) => {
     Toast.show({
       type: 'success',
-      text1: 'Success',
+      text1: 'SUCCESS',
       text2: message,
       position: 'top',
       visibilityTime: 2000,
@@ -104,33 +99,30 @@ export default function MedicalScreen() {
   }
 
   const validateForm = () => {
-    // Check emergency contacts
     if (medicalInfo.emergencyContacts.length === 0) {
-      showError('At least one emergency contact is required')
+      showError('AT LEAST ONE CONTACT REQUIRED')
       return false
     }
 
     for (const [index, contact] of medicalInfo.emergencyContacts.entries()) {
       if (!contact.name.trim()) {
-        showError(`Contact ${index + 1}: Name is required`)
+        showError(`CONTACT ${index + 1}: NAME REQUIRED`)
         return false
       }
       if (!contact.phone.trim()) {
-        showError(`Contact ${index + 1}: Phone number is required`)
+        showError(`CONTACT ${index + 1}: PHONE REQUIRED`)
         return false
       }
-      // Basic phone validation
       const phoneRegex = /^[\+]?[(]?[0-9]{1,3}[)]?[-\s\.]?[0-9]{1,3}[-\s\.]?[0-9]{4,6}$/
       if (!phoneRegex.test(contact.phone)) {
-        showError(`Contact ${index + 1}: Please enter a valid phone number`)
+        showError(`CONTACT ${index + 1}: INVALID PHONE`)
         return false
       }
     }
 
-    // Blood type validation
     const validBloodTypes = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']
     if (medicalInfo.bloodType && !validBloodTypes.includes(medicalInfo.bloodType)) {
-      showError('Please select a valid blood type')
+      showError('SELECT VALID BLOOD TYPE')
       return false
     }
 
@@ -139,7 +131,7 @@ export default function MedicalScreen() {
 
   const saveMedicalInfo = async () => {
     if (!account) {
-      showError('Wallet not connected')
+      showError('WALLET NOT CONNECTED')
       return
     }
 
@@ -147,13 +139,11 @@ export default function MedicalScreen() {
 
     setIsLoading(true)
     try {
-      // Add timestamp
       const dataToSave = {
         ...medicalInfo,
         lastUpdated: Date.now()
       }
       
-      // Simple encryption (base64)
       const jsonString = JSON.stringify(dataToSave)
       const encrypted = btoa(jsonString)
       
@@ -162,17 +152,16 @@ export default function MedicalScreen() {
         encrypted
       )
       
-      showSuccess('Medical information saved securely')
+      showSuccess('MEDICAL INFO SAVED')
       setTimeout(() => router.back(), 1500)
     } catch (error) {
       console.error('Save error:', error)
-      showError('Failed to save')
+      showError('FAILED TO SAVE')
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Contact management
   const addContact = () => {
     setMedicalInfo({
       ...medicalInfo,
@@ -181,7 +170,7 @@ export default function MedicalScreen() {
         { name: '', phone: '', relationship: '' }
       ]
     })
-    showSuccess('New contact added')
+    showSuccess('CONTACT ADDED')
   }
 
   const updateContact = (index: number, field: keyof Contact, value: string) => {
@@ -192,15 +181,14 @@ export default function MedicalScreen() {
 
   const removeContact = (index: number) => {
     if (medicalInfo.emergencyContacts.length <= 1) {
-      showError('You need at least one emergency contact')
+      showError('MINIMUM ONE CONTACT')
       return
     }
     const updated = medicalInfo.emergencyContacts.filter((_, i) => i !== index)
     setMedicalInfo({ ...medicalInfo, emergencyContacts: updated })
-    showSuccess('Contact removed')
+    showSuccess('CONTACT REMOVED')
   }
 
-  // Condition management
   const addCondition = () => {
     setMedicalInfo({
       ...medicalInfo,
@@ -209,7 +197,7 @@ export default function MedicalScreen() {
         { name: '', severity: 'mild' as const }
       ]
     })
-    showSuccess('New condition added')
+    showSuccess('CONDITION ADDED')
   }
 
   const updateCondition = (index: number, field: keyof Condition, value: string) => {
@@ -221,115 +209,143 @@ export default function MedicalScreen() {
   const removeCondition = (index: number) => {
     const updated = medicalInfo.conditions.filter((_, i) => i !== index)
     setMedicalInfo({ ...medicalInfo, conditions: updated })
-    showSuccess('Condition removed')
+    showSuccess('CONDITION REMOVED')
+  }
+
+  const getSeverityColor = (severity: string, isSelected: boolean) => {
+    if (!isSelected) return 'border-[#4a2c5a] bg-transparent'
+    switch(severity) {
+      case 'severe': return 'border-[#ff6f61] bg-[#ff6f61]'
+      case 'moderate': return 'border-[#ffb86b] bg-[#ffb86b]'
+      case 'mild': return 'border-[#00ff9d] bg-[#00ff9d]'
+      default: return 'border-[#4a2c5a]'
+    }
+  }
+
+  const getSeverityTextColor = (severity: string, isSelected: boolean) => {
+    if (!isSelected) return 'text-[#b39eb5]'
+    return 'text-[#0a0a1f]'
   }
 
   if (!account) {
     return (
-      <View className={`flex-1 ${colors.primary.bg} items-center justify-center`}>
-        <Text className={colors.primary.text}>Please connect wallet</Text>
-      </View>
+      <LinearGradient colors={['#0a0a1f', '#1a0f2e', '#000000']} className="flex-1 items-center justify-center">
+        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-xs">
+          CONNECT WALLET
+        </Text>
+      </LinearGradient>
     )
   }
 
   return (
-    <View className={`flex-1 ${colors.primary.bg}`}>
+    <LinearGradient colors={['#0a0a1f', '#1a0f2e', '#000000']} className="flex-1">
       <Header address={account.address.toString()} />
       
-      <ScrollView className="flex-1 px-6 pt-6">
-        <Text className={`text-2xl font-bold ${colors.primary.text} mb-2`}>
-          Medical Information
-        </Text>
-        <Text className={`${colors.primary.subtext} mb-1`}>
-          This data is encrypted and stored only on your device
-        </Text>
-        {medicalInfo.lastUpdated && (
-          <Text className="text-xs text-gray-400 mb-6">
-            Last updated: {new Date(medicalInfo.lastUpdated).toLocaleDateString()} at{' '}
-            {new Date(medicalInfo.lastUpdated).toLocaleTimeString()}
+      <ScrollView className="flex-1 px-4 pt-4">
+        {/* Header */}
+        <View className="mb-4">
+          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-lg mb-1">
+            🏥 MEDICAL INFO
           </Text>
-        )}
+          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px]">
+            ENCRYPTED • DEVICE ONLY
+          </Text>
+          {medicalInfo.lastUpdated && (
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#4a2c5a] text-[6px] mt-2">
+              UPDATED: {new Date(medicalInfo.lastUpdated).toLocaleDateString().toUpperCase()}
+            </Text>
+          )}
+        </View>
 
         {/* Allergies */}
         <View className="mb-4">
-          <Text className={`${colors.primary.text} font-bold mb-2`}>Allergies</Text>
-          <TextInput
-            className="bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl p-4 text-gray-900 dark:text-white"
-            placeholder="e.g., Penicillin, Peanuts, Latex"
-            placeholderTextColor="#9CA3AF"
-            value={medicalInfo.allergies}
-            onChangeText={(text) => setMedicalInfo({...medicalInfo, allergies: text})}
-            multiline
-          />
+          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-xs mb-2">
+            ALLERGIES
+          </Text>
+          <View className="border-2 border-[#6a0dad] p-1">
+            <TextInput
+              className="p-3 text-[#ffd9b3] text-[10px]"
+              placeholder="PENICILLIN, PEANUTS, LATEX"
+              placeholderTextColor="#4a2c5a"
+              value={medicalInfo.allergies}
+              onChangeText={(text) => setMedicalInfo({...medicalInfo, allergies: text})}
+              multiline
+              style={{ fontFamily: 'PressStart2P_400Regular' }}
+            />
+          </View>
         </View>
 
-        {/* Blood Type with Picker */}
+        {/* Blood Type */}
         <View className="mb-4">
-          <Text className={`${colors.primary.text} font-bold mb-2`}>Blood Type</Text>
-          <View className="bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl">
+          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-xs mb-2">
+            BLOOD TYPE
+          </Text>
+          <View className="border-2 border-[#6a0dad]">
             <Picker
               selectedValue={medicalInfo.bloodType}
               onValueChange={(value) => setMedicalInfo({...medicalInfo, bloodType: value})}
-              dropdownIconColor={colors.primary.text === 'text-gray-800 dark:text-white' ? '#666' : '#fff'}
+              dropdownIconColor="#ff6f61"
+              style={{ color: '#ffd9b3', fontFamily: 'PressStart2P_400Regular' }}
             >
-              <Picker.Item label="Select blood type" value="" />
-              <Picker.Item label="A+" value="A+" />
-              <Picker.Item label="A-" value="A-" />
-              <Picker.Item label="B+" value="B+" />
-              <Picker.Item label="B-" value="B-" />
-              <Picker.Item label="O+" value="O+" />
-              <Picker.Item label="O-" value="O-" />
-              <Picker.Item label="AB+" value="AB+" />
-              <Picker.Item label="AB-" value="AB-" />
+              <Picker.Item label="SELECT BLOOD TYPE" value="" color="#4a2c5a" />
+              <Picker.Item label="A+" value="A+" color="#ffd9b3" />
+              <Picker.Item label="A-" value="A-" color="#ffd9b3" />
+              <Picker.Item label="B+" value="B+" color="#ffd9b3" />
+              <Picker.Item label="B-" value="B-" color="#ffd9b3" />
+              <Picker.Item label="O+" value="O+" color="#ffd9b3" />
+              <Picker.Item label="O-" value="O-" color="#ffd9b3" />
+              <Picker.Item label="AB+" value="AB+" color="#ffd9b3" />
+              <Picker.Item label="AB-" value="AB-" color="#ffd9b3" />
             </Picker>
           </View>
         </View>
 
-        {/* Medical Conditions with Severity */}
+        {/* Medical Conditions */}
         <View className="mb-4">
           <View className="flex-row justify-between items-center mb-2">
-            <Text className={`${colors.primary.text} font-bold`}>Medical Conditions</Text>
-            <Pressable onPress={addCondition} className="bg-blue-600 px-3 py-1 rounded-lg">
-              <Text className="text-white text-sm font-bold">+ Add</Text>
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-xs">
+              CONDITIONS
+            </Text>
+            <Pressable onPress={addCondition} className="border border-[#ff6f61] px-2 py-1">
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px]">
+                + ADD
+              </Text>
             </Pressable>
           </View>
 
           {medicalInfo.conditions.map((condition, index) => (
-            <View key={index} className="mb-3 p-3 border border-gray-200 dark:border-gray-700 rounded-xl">
+            <View key={index} className="border-2 border-[#8a2be2] p-3 mb-2">
               <View className="flex-row justify-between mb-2">
-                <Text className="text-gray-600 dark:text-gray-400 text-xs">Condition {index + 1}</Text>
+                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[6px]">
+                  CONDITION {index + 1}
+                </Text>
                 <Pressable onPress={() => removeCondition(index)}>
-                  <Text className="text-red-500 text-xs">Remove</Text>
+                  <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[6px]">
+                    REMOVE
+                  </Text>
                 </Pressable>
               </View>
               
-              <TextInput
-                className="bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-2 mb-2 text-gray-900 dark:text-white"
-                placeholder="Condition name"
-                placeholderTextColor="#9CA3AF"
-                value={condition.name}
-                onChangeText={(text) => updateCondition(index, 'name', text)}
-              />
+              <View className="border border-[#6a0dad] mb-2">
+                <TextInput
+                  className="p-2 text-[#ffd9b3] text-[8px]"
+                  placeholder="CONDITION NAME"
+                  placeholderTextColor="#4a2c5a"
+                  value={condition.name}
+                  onChangeText={(text) => updateCondition(index, 'name', text)}
+                  style={{ fontFamily: 'PressStart2P_400Regular' }}
+                />
+              </View>
               
               <View className="flex-row justify-between">
                 {(['mild', 'moderate', 'severe'] as const).map((severity) => (
                   <Pressable
                     key={severity}
                     onPress={() => updateCondition(index, 'severity', severity)}
-                    className={`px-3 py-1 rounded-lg ${
-                      condition.severity === severity
-                        ? severity === 'severe'
-                          ? 'bg-red-500'
-                          : severity === 'moderate'
-                          ? 'bg-yellow-500'
-                          : 'bg-green-500'
-                        : 'bg-gray-200 dark:bg-gray-700'
-                    }`}
+                    className={`px-2 py-1 border-2 ${getSeverityColor(severity, condition.severity === severity)}`}
                   >
-                    <Text className={`text-xs font-bold ${
-                      condition.severity === severity ? 'text-white' : 'text-gray-700 dark:text-gray-300'
-                    }`}>
-                      {severity}
+                    <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className={`text-[6px] ${getSeverityTextColor(severity, condition.severity === severity)}`}>
+                      {severity.toUpperCase()}
                     </Text>
                   </Pressable>
                 ))}
@@ -341,45 +357,62 @@ export default function MedicalScreen() {
         {/* Emergency Contacts */}
         <View className="mb-8">
           <View className="flex-row justify-between items-center mb-2">
-            <Text className={`${colors.primary.text} font-bold`}>Emergency Contacts</Text>
-            <Pressable onPress={addContact} className="bg-blue-600 px-3 py-1 rounded-lg">
-              <Text className="text-white text-sm font-bold">+ Add</Text>
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-xs">
+              EMERGENCY CONTACTS
+            </Text>
+            <Pressable onPress={addContact} className="border border-[#ff6f61] px-2 py-1">
+              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px]">
+                + ADD
+              </Text>
             </Pressable>
           </View>
 
           {medicalInfo.emergencyContacts.map((contact, index) => (
-            <View key={index} className="mb-4 p-4 border border-gray-200 dark:border-gray-700 rounded-xl">
+            <View key={index} className="border-2 border-[#00ff9d] p-3 mb-3">
               <View className="flex-row justify-between mb-2">
-                <Text className="text-gray-600 dark:text-gray-400 text-xs">Contact {index + 1}</Text>
+                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[6px]">
+                  CONTACT {index + 1}
+                </Text>
                 <Pressable onPress={() => removeContact(index)}>
-                  <Text className="text-red-500 text-xs">Remove</Text>
+                  <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[6px]">
+                    REMOVE
+                  </Text>
                 </Pressable>
               </View>
 
-              <TextInput
-                className="bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-3 mb-2 text-gray-900 dark:text-white"
-                placeholder="Full name *"
-                placeholderTextColor="#9CA3AF"
-                value={contact.name}
-                onChangeText={(text) => updateContact(index, 'name', text)}
-              />
+              <View className="border border-[#6a0dad] mb-2">
+                <TextInput
+                  className="p-2 text-[#ffd9b3] text-[8px]"
+                  placeholder="FULL NAME *"
+                  placeholderTextColor="#4a2c5a"
+                  value={contact.name}
+                  onChangeText={(text) => updateContact(index, 'name', text)}
+                  style={{ fontFamily: 'PressStart2P_400Regular' }}
+                />
+              </View>
 
-              <TextInput
-                className="bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-3 mb-2 text-gray-900 dark:text-white"
-                placeholder="Phone number *"
-                placeholderTextColor="#9CA3AF"
-                value={contact.phone}
-                onChangeText={(text) => updateContact(index, 'phone', text)}
-                keyboardType="phone-pad"
-              />
+              <View className="border border-[#6a0dad] mb-2">
+                <TextInput
+                  className="p-2 text-[#ffd9b3] text-[8px]"
+                  placeholder="PHONE NUMBER *"
+                  placeholderTextColor="#4a2c5a"
+                  value={contact.phone}
+                  onChangeText={(text) => updateContact(index, 'phone', text)}
+                  keyboardType="phone-pad"
+                  style={{ fontFamily: 'PressStart2P_400Regular' }}
+                />
+              </View>
 
-              <TextInput
-                className="bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-3 text-gray-900 dark:text-white"
-                placeholder="Relationship (e.g., Spouse, Parent)"
-                placeholderTextColor="#9CA3AF"
-                value={contact.relationship}
-                onChangeText={(text) => updateContact(index, 'relationship', text)}
-              />
+              <View className="border border-[#6a0dad]">
+                <TextInput
+                  className="p-2 text-[#ffd9b3] text-[8px]"
+                  placeholder="RELATIONSHIP"
+                  placeholderTextColor="#4a2c5a"
+                  value={contact.relationship}
+                  onChangeText={(text) => updateContact(index, 'relationship', text)}
+                  style={{ fontFamily: 'PressStart2P_400Regular' }}
+                />
+              </View>
             </View>
           ))}
         </View>
@@ -388,15 +421,23 @@ export default function MedicalScreen() {
         <Pressable 
           onPress={saveMedicalInfo}
           disabled={isLoading}
-          className={`bg-blue-600 py-4 rounded-xl active:bg-blue-700 mb-8 ${isLoading ? 'opacity-50' : ''}`}
+          className="mb-8"
         >
-          <Text className="text-white font-bold text-lg text-center">
-            {isLoading ? 'Saving...' : 'Save Medical Info Securely'}
-          </Text>
+          <LinearGradient
+            colors={isLoading ? ['#4a2c5a', '#2a1a3a'] : ['#ff6f61', '#8a2be2']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            className={`p-4 border-2 border-[#ff6f61] ${isLoading ? 'opacity-50' : ''}`}
+            style={{ shadowColor: '#ff6f61', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.5, shadowRadius: 10 }}
+          >
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-xs text-center">
+              {isLoading ? 'SAVING...' : 'SAVE MEDICAL INFO'}
+            </Text>
+          </LinearGradient>
         </Pressable>
       </ScrollView>
 
       <StatusBar style="auto" />
-    </View>
+    </LinearGradient>
   )
 }
