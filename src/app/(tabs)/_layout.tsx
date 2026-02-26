@@ -1,5 +1,4 @@
 import { Tabs } from 'expo-router'
-import { View, Text } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { PixelIcon } from '../../components/PixelIcon'
 
@@ -36,7 +35,7 @@ export default function TabsLayout() {
         options={{
           title: 'HOME',
           tabBarIcon: ({ color }) => (
-            <PixelIcon name="heart" color={color} size={20} />
+            <PixelIcon name="home" color={color} size={20} />
           ),
         }}
       />
@@ -44,9 +43,9 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="health"
         options={{
-          title: 'HEALTH',
+          title: 'HLTH',
           tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 20, color }}>🏥</Text>
+            <PixelIcon name="health" color={color} size={20} />
           ),
         }}
       />
@@ -54,9 +53,9 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="financial"
         options={{
-          title: 'FINANCE',
+          title: 'FIN',
           tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 20, color }}>💰</Text>
+            <PixelIcon name="finance" color={color} size={20} />
           ),
         }}
       />
@@ -64,9 +63,9 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="property"
         options={{
-          title: 'PROPERTY',
+          title: 'PROP',
           tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 20, color }}>🏠</Text>
+            <PixelIcon name="property" color={color} size={20} />
           ),
         }}
       />
@@ -74,9 +73,9 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="identity"
         options={{
-          title: 'IDENTITY',
+          title: 'ID',
           tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 20, color }}>🆔</Text>
+            <PixelIcon name="identity" color={color} size={20} />
           ),
         }}
       />
@@ -86,7 +85,7 @@ export default function TabsLayout() {
         options={{
           title: 'DOCS',
           tabBarIcon: ({ color }) => (
-            <Text style={{ fontSize: 20, color }}>📜</Text>
+            <PixelIcon name="document" color={color} size={20} />
           ),
         }}
       />
