@@ -98,7 +98,7 @@ const QuickAction = ({ icon, label, onPress, color }: { icon: React.ReactNode; l
 const ActivityItem = ({ icon, text, time, verified }: { icon: React.ReactNode; text: string; time: string; verified: boolean }) => (
   <View className="flex-row items-center mb-3 border-b border-[#4a2c5a] pb-2">
     <View className="mr-3 w-8 h-8 items-center justify-center">
-      {icon}
+     <Text> {icon} </Text>
     </View>
     <View className="flex-1">
       <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-[10px]">
