@@ -150,30 +150,56 @@ export default function PropertyTab() {
               onChangeText={(text) => setNewRental({ ...newRental, startDate: text })}
             />
             <View className="flex-row justify-between">
-              <Pressable onPress={() => setShowAddRental(false)} className="flex-1 border-2 border-[#ff6f61] p-3 mr-2">
-                <PS2PText className="text-[#ff6f61] text-xs text-center">CANCEL</PS2PText>
+              <Pressable onPress={() => setShowAddRental(false)} className="flex-1 bg-[#0a0a1f] p-3 mr-2">
+                <PS2PText className="text-white text-xs text-center">CANCEL</PS2PText>
               </Pressable>
-              <Pressable onPress={addRental} className="flex-1 border-2 border-[#00ff9d] p-3 ml-2">
-                <PS2PText className="text-[#00ff9d] text-xs text-center">SAVE</PS2PText>
+              <Pressable onPress={addRental} className="flex-1 bg-[#8a2be2] p-3 ml-2">
+                <PS2PText className="text-white text-xs text-center">SAVE</PS2PText>
               </Pressable>
             </View>
           </View>
         )}
 
-        {/* Rental history list */}
-        {rentalHistory.map((rental) => (
-          <RentalCard key={rental.id} rental={rental} onVerify={() => requestLandlordVerification(rental)} />
-        ))}
+        {/* Rental History Section */}
+        <View className="mb-4">
+          <PS2PText className="text-white text-xs mb-3">CURRENT RENTALS</PS2PText>
+          
+          {rentalHistory.length === 0 ? (
+            <View className="bg-[#1a1a2f] p-8 items-center">
+              <PS2PText className="text-[#a0a0b0] text-xs text-center mb-2">
+                NO RENTALS YET
+              </PS2PText>
+              <PS2PText className="text-[#4a4a6a] text-[8px] text-center">
+                TAP + TO ADD YOUR FIRST RENTAL
+              </PS2PText>
+            </View>
+          ) : (
+            rentalHistory.map((rental) => (
+              <RentalCard key={rental.id} rental={rental} onVerify={() => requestLandlordVerification(rental)} />
+            ))
+          )}
+        </View>
 
-        {/* Attestations */}
+        {/* Attestations Section */}
         {attestations.length > 0 && (
-          <>
-            <PS2PText className="text-white text-xs my-3">ATTESTATIONS</PS2PText>
+          <View className="mb-4">
+            <PS2PText className="text-white text-xs mb-3">VERIFIABLE PROOFS</PS2PText>
             {attestations.map((att) => (
               <AttestationCard key={att.id} attestation={att} />
             ))}
-          </>
+          </View>
         )}
+
+        {/* Quick Action */}
+        <Pressable 
+          onPress={() => router.push('/attestations/scan')}
+          className="bg-[#1a1a2f] p-4 mt-2 mb-8"
+        >
+          <PS2PText className="text-[#8a2be2] text-xs text-center">SCAN LANDLORD QR</PS2PText>
+          <PS2PText className="text-[#a0a0b0] text-[6px] text-center mt-2">
+            HAVE YOUR LANDLORD VERIFY YOUR RENTAL HISTORY
+          </PS2PText>
+        </Pressable>
       </ScrollView>
 
       <StatusBar style="light" />
