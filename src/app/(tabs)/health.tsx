@@ -14,7 +14,11 @@ export default function HealthTab() {
   const { account } = useMobileWallet()
   const { medical: medicalData, reload: reloadMedical } = useMedical()
 
-  // medicalData is kept up to date by the hook; call reloadMedical() if you need to refresh.
+  // Show toast or alert for coming soon features
+  const showComingSoon = () => {
+    // You can add a toast here if you want
+    console.log('Coming soon feature')
+  }
 
   return (
     <LinearGradient colors={['#0a0a1f', '#1a1a2f']} className="flex-1">
@@ -73,28 +77,32 @@ export default function HealthTab() {
           icon={<PS2PText className="text-2xl">💊</PS2PText>}
           title="MEDICATIONS"
           subtitle="Add prescriptions & reminders"
-          onPress={() => {}}
+          onPress={() => router.push('/medications')} // Will navigate when screen exists
+          layout="horizontal"
         />
 
         <QuickAction
           icon={<PS2PText className="text-2xl">💉</PS2PText>}
           title="VACCINATIONS"
           subtitle="Store COVID, flu, etc."
-          onPress={() => {}}
+          onPress={() => router.push('/vaccinations')} // Will navigate when screen exists
+          layout="horizontal"
         />
 
         <QuickAction
           icon={<PS2PText className="text-2xl">🏥</PS2PText>}
           title="DOCTOR VISITS"
           subtitle="Appointment history"
-          onPress={() => {}}
+          onPress={() => router.push('/doctor-visits')} // Will navigate when screen exists
+          layout="horizontal"
         />
 
         <QuickAction
           icon={<PS2PText className="text-2xl">🩺</PS2PText>}
           title="INSURANCE"
           subtitle="Cards & policies"
-          onPress={() => {}}
+          onPress={() => router.push('/insurance')} // Will navigate when screen exists
+          layout="horizontal"
         />
 
         {/* Coming Soon Note */}
