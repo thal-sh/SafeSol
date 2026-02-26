@@ -102,7 +102,7 @@ export default function Home() {
 
         <View className="flex-row justify-between mb-6">
           <QuickAction 
-            icon={<PixelIcon name="qr" color="#ff6f61" size={20} />} 
+            icon={<PixelIcon name="health" color="#ff6f61" size={20} />} 
             label="EMERGENCY" 
             onPress={() => router.push('/qr')} 
           />
