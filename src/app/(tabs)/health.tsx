@@ -1,58 +1,20 @@
-import { useState, useEffect } from 'react'
-import { Text, View, ScrollView, Pressable } from 'react-native'
+import { useEffect } from 'react'
+import { View, ScrollView, Pressable } from 'react-native'
 import { useMobileWallet } from '@wallet-ui/react-native-kit'
 import { LinearGradient } from 'expo-linear-gradient'
 import { StatusBar } from 'expo-status-bar'
 import { router } from 'expo-router'
-import { storage } from '../../utils/storage'
-import { MedicalInfo } from '../../types'
 import { PixelIcon } from '../../components/PixelIcon'
-
-// Quick Action Component
-const QuickAction = ({ icon, title, subtitle, onPress }: { icon: React.ReactNode; title: string; subtitle: string; onPress: () => void }) => (
-  <Pressable onPress={onPress} className="mb-2">
-    <View className="bg-[#1a1a2f] p-4 flex-row items-center">
-      <View className="mr-3 w-8 h-8 items-center justify-center">
-        <Text>{icon}</Text>
-      </View>
-      <View className="flex-1">
-        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-xs">
-          {title}
-        </Text>
-        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#a0a0b0] text-[6px] mt-1">
-          {subtitle}
-        </Text>
-      </View>
-    </View>
-  </Pressable>
-)
-
-// Info Row Component
-const InfoRow = ({ label, value }: { label: string; value: string }) => (
-  <View className="flex-row mb-1">
-    <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#a0a0b0] text-[8px] w-24">
-      {label}:
-    </Text>
-    <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-[8px] flex-1">
-      {value}
-    </Text>
-  </View>
-)
+import { QuickAction } from '../../components/QuickAction'
+import { InfoRow } from '../../components/InfoRow'
+import { PS2PText } from '../../components/PS2PText'
+import { useMedical } from '../../hooks/useMedical'
 
 export default function HealthTab() {
   const { account } = useMobileWallet()
-  const [medicalData, setMedicalData] = useState<MedicalInfo | null>(null)
+  const { medical: medicalData, reload: reloadMedical } = useMedical()
 
-  useEffect(() => {
-    if (account) {
-      loadData()
-    }
-  }, [account])
-
-  const loadData = async () => {
-    const data = await storage.getMedical(account!.address.toString())
-    setMedicalData(data)
-  }
+  // medicalData is kept up to date by the hook; call reloadMedical() if you need to refresh.
 
   return (
     <LinearGradient colors={['#0a0a1f', '#1a1a2f']} className="flex-1">
@@ -62,9 +24,9 @@ export default function HealthTab() {
           <View className="mr-2">
             <PixelIcon name="health" color="#ff6f61" size={24} />
           </View>
-          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-lg">
+          <PS2PText className="text-white text-lg">
             HEALTH
-          </Text>
+          </PS2PText>
         </View>
       </View>
 
@@ -75,12 +37,12 @@ export default function HealthTab() {
           className="bg-[#1a1a2f] p-4 mb-6"
         >
           <View className="flex-row justify-between items-center mb-3">
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-xs">
+            <PS2PText className="text-white text-xs">
               MEDICAL INFO
-            </Text>
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px]">
+            </PS2PText>
+            <PS2PText className="text-[#ff6f61] text-[8px]">
               EDIT →
-            </Text>
+            </PS2PText>
           </View>
           
           {medicalData ? (
@@ -90,46 +52,46 @@ export default function HealthTab() {
               <InfoRow label="CONDITIONS" value={`${medicalData.conditions?.length || 0}`} />
               <InfoRow label="CONTACTS" value={`${medicalData.emergencyContacts?.length || 0}`} />
               {medicalData.lastUpdated && (
-                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#4a4a6a] text-[6px] mt-2">
+                <PS2PText className="text-[#4a4a6a] text-[6px] mt-2">
                   UPDATED: {new Date(medicalData.lastUpdated).toLocaleDateString().toUpperCase()}
-                </Text>
+                </PS2PText>
               )}
             </View>
           ) : (
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#a0a0b0] text-[8px]">
+            <PS2PText className="text-[#a0a0b0] text-[8px]">
               No medical info yet. Tap to add.
-            </Text>
+            </PS2PText>
           )}
         </Pressable>
 
         {/* Quick Actions */}
-        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-xs mb-3">
+        <PS2PText className="text-white text-xs mb-3">
           QUICK ACTIONS
-        </Text>
+        </PS2PText>
 
         <QuickAction
-          icon={<Text className="text-2xl">💊</Text>}
+          icon={<PS2PText className="text-2xl">💊</PS2PText>}
           title="MEDICATIONS"
           subtitle="Add prescriptions & reminders"
           onPress={() => {}}
         />
 
         <QuickAction
-          icon={<Text className="text-2xl">💉</Text>}
+          icon={<PS2PText className="text-2xl">💉</PS2PText>}
           title="VACCINATIONS"
           subtitle="Store COVID, flu, etc."
           onPress={() => {}}
         />
 
         <QuickAction
-          icon={<Text className="text-2xl">🏥</Text>}
+          icon={<PS2PText className="text-2xl">🏥</PS2PText>}
           title="DOCTOR VISITS"
           subtitle="Appointment history"
           onPress={() => {}}
         />
 
         <QuickAction
-          icon={<Text className="text-2xl">🩺</Text>}
+          icon={<PS2PText className="text-2xl">🩺</PS2PText>}
           title="INSURANCE"
           subtitle="Cards & policies"
           onPress={() => {}}
@@ -137,9 +99,9 @@ export default function HealthTab() {
 
         {/* Coming Soon Note */}
         <View className="mt-4 mb-8">
-          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#4a4a6a] text-[6px] text-center">
+          <PS2PText className="text-[#4a4a6a] text-[6px] text-center">
             MORE HEALTH FEATURES COMING SOON
-          </Text>
+          </PS2PText>
         </View>
       </ScrollView>
 
