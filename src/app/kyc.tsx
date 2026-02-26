@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Text, View, ScrollView, Pressable, Image } from 'react-native'
+import { View, ScrollView, Pressable, Image } from 'react-native'
 import { router } from 'expo-router'
 import { useMobileWallet } from '@wallet-ui/react-native-kit'
 import { StatusBar } from 'expo-status-bar'
@@ -8,6 +8,7 @@ import * as ImagePicker from 'expo-image-picker'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Toast from 'react-native-toast-message'
 import { Header } from '../components/Header'
+import { PS2PText } from '../components/PS2PText'
 
 type KYCStatus = 'pending' | 'submitted' | 'verified' | 'rejected'
 
@@ -246,33 +247,33 @@ export default function KYCScreen() {
       case 'verified':
         return (
           <View className="border-2 border-[#00ff9d] px-3 py-1 self-start">
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#00ff9d] text-[8px]">
+            <PS2PText className="text-[#00ff9d] text-[8px]">
               ✓ VERIFIED
-            </Text>
+            </PS2PText>
           </View>
         )
       case 'submitted':
         return (
           <View className="border-2 border-[#ffb86b] px-3 py-1 self-start">
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffb86b] text-[8px]">
+            <PS2PText className="text-[#ffb86b] text-[8px]">
               ⏳ PENDING
-            </Text>
+            </PS2PText>
           </View>
         )
       case 'rejected':
         return (
           <View className="border-2 border-[#ff6f61] px-3 py-1 self-start">
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px]">
+            <PS2PText className="text-[#ff6f61] text-[8px]">
               ✗ REJECTED
-            </Text>
+            </PS2PText>
           </View>
         )
       default:
         return (
           <View className="border-2 border-[#4a2c5a] px-3 py-1 self-start">
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px]">
+            <PS2PText className="text-[#b39eb5] text-[8px]">
               ○ NOT STARTED
-            </Text>
+            </PS2PText>
           </View>
         )
     }
@@ -281,9 +282,9 @@ export default function KYCScreen() {
   if (!account) {
     return (
       <LinearGradient colors={['#0a0a1f', '#1a0f2e', '#000000']} className="flex-1 items-center justify-center">
-        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-xs">
+        <PS2PText className="text-[#ffd9b3] text-xs">
           CONNECT WALLET
-        </Text>
+        </PS2PText>
       </LinearGradient>
     )
   }
@@ -293,29 +294,29 @@ export default function KYCScreen() {
       <Header address={account.address.toString()} />
       
       <ScrollView className="flex-1 px-4 pt-4">
-        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-lg mb-1">
+        <PS2PText className="text-[#ffd9b3] text-lg mb-1">
           ✅ KYC VERIFICATION
-        </Text>
-        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] mb-4">
+        </PS2PText>
+        <PS2PText className="text-[#b39eb5] text-[8px] mb-4">
           VERIFY ONCE • NO DATA STORED
-        </Text>
+        </PS2PText>
         
         {/* Status Section */}
         <View className="mb-6">
-          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-xs mb-2">
+          <PS2PText className="text-[#ffd9b3] text-xs mb-2">
             CURRENT STATUS
-          </Text>
+          </PS2PText>
           {getStatusBadge()}
           {kycData.verifiedAt && (
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#4a2c5a] text-[6px] mt-2">
+            <PS2PText className="text-[#4a2c5a] text-[6px] mt-2">
               VERIFIED: {new Date(kycData.verifiedAt).toLocaleDateString().toUpperCase()}
-            </Text>
+            </PS2PText>
           )}
           {kycData.rejectionReason && (
             <View className="border-2 border-[#ff6f61] p-2 mt-2">
-              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px]">
+              <PS2PText className="text-[#ff6f61] text-[8px]">
                 REASON: {kycData.rejectionReason}
-              </Text>
+              </PS2PText>
             </View>
           )}
         </View>
@@ -324,21 +325,21 @@ export default function KYCScreen() {
           // Verified State
           <View className="items-center py-8">
             <View className="w-24 h-24 border-4 border-[#00ff9d] items-center justify-center mb-4">
-              <Text className="text-5xl text-[#00ff9d]">✓</Text>
+              <PS2PText className="text-5xl text-[#00ff9d]">✓</PS2PText>
             </View>
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-sm mb-2 text-center">
+            <PS2PText className="text-[#ffd9b3] text-sm mb-2 text-center">
               IDENTITY VERIFIED
-            </Text>
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] text-center mb-6">
+            </PS2PText>
+            <PS2PText className="text-[#b39eb5] text-[8px] text-center mb-6">
               ALL FEATURES UNLOCKED
-            </Text>
+            </PS2PText>
             <Pressable 
               onPress={resetKYC}
               className="border-2 border-[#ff6f61] px-4 py-2"
             >
-              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px]">
+              <PS2PText className="text-[#ff6f61] text-[8px]">
                 RESET KYC (DEMO)
-              </Text>
+              </PS2PText>
             </Pressable>
           </View>
         ) : (
@@ -346,12 +347,12 @@ export default function KYCScreen() {
           <>
             {/* ID Document Upload */}
             <View className="mb-6">
-              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-xs mb-2">
+              <PS2PText className="text-[#ffd9b3] text-xs mb-2">
                 ID DOCUMENT
-              </Text>
-              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[6px] mb-3">
+              </PS2PText>
+              <PS2PText className="text-[#b39eb5] text-[6px] mb-3">
                 PASSPORT, LICENSE, OR NATIONAL ID
-              </Text>
+              </PS2PText>
               
               {idImage ? (
                 <View className="mb-3">
@@ -362,9 +363,9 @@ export default function KYCScreen() {
                     onPress={() => pickImage('id')}
                     className="mt-2"
                   >
-                    <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px] text-center">
+                    <PS2PText className="text-[#ff6f61] text-[8px] text-center">
                       CHANGE ID
-                    </Text>
+                    </PS2PText>
                   </Pressable>
                 </View>
               ) : (
@@ -373,19 +374,19 @@ export default function KYCScreen() {
                     onPress={() => pickImage('id')}
                     className="flex-1 border-2 border-[#6a0dad] p-3 items-center mr-1"
                   >
-                    <Text className="text-2xl mb-1">📁</Text>
-                    <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px]">
+                    <PS2PText className="text-2xl mb-1">📁</PS2PText>
+                    <PS2PText className="text-[#ff6f61] text-[8px]">
                       UPLOAD
-                    </Text>
+                    </PS2PText>
                   </Pressable>
                   <Pressable 
                     onPress={() => takePhoto('id')}
                     className="flex-1 border-2 border-[#6a0dad] p-3 items-center ml-1"
                   >
-                    <Text className="text-2xl mb-1">📷</Text>
-                    <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px]">
+                    <PS2PText className="text-2xl mb-1">📷</PS2PText>
+                    <PS2PText className="text-[#ff6f61] text-[8px]">
                       CAMERA
-                    </Text>
+                    </PS2PText>
                   </Pressable>
                 </View>
               )}
@@ -393,12 +394,12 @@ export default function KYCScreen() {
 
             {/* Selfie Upload */}
             <View className="mb-8">
-              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-xs mb-2">
+              <PS2PText className="text-[#ffd9b3] text-xs mb-2">
                 SELFIE
-              </Text>
-              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[6px] mb-3">
+              </PS2PText>
+              <PS2PText className="text-[#b39eb5] text-[6px] mb-3">
                 CLEAR PHOTO OF YOUR FACE
-              </Text>
+              </PS2PText>
               
               {selfieImage ? (
                 <View className="mb-3 items-center">
@@ -409,9 +410,9 @@ export default function KYCScreen() {
                     onPress={() => takePhoto('selfie')}
                     className="mt-2"
                   >
-                    <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px]">
+                    <PS2PText className="text-[#ff6f61] text-[8px]">
                       RETAKE
-                    </Text>
+                    </PS2PText>
                   </Pressable>
                 </View>
               ) : (
@@ -420,19 +421,19 @@ export default function KYCScreen() {
                     onPress={() => pickImage('selfie')}
                     className="flex-1 border-2 border-[#6a0dad] p-3 items-center mr-1"
                   >
-                    <Text className="text-2xl mb-1">📁</Text>
-                    <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px]">
+                    <PS2PText className="text-2xl mb-1">📁</PS2PText>
+                    <PS2PText className="text-[#ff6f61] text-[8px]">
                       UPLOAD
-                    </Text>
+                    </PS2PText>
                   </Pressable>
                   <Pressable 
                     onPress={() => takePhoto('selfie')}
                     className="flex-1 border-2 border-[#6a0dad] p-3 items-center ml-1"
                   >
-                    <Text className="text-2xl mb-1">📷</Text>
-                    <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px]">
+                    <PS2PText className="text-2xl mb-1">📷</PS2PText>
+                    <PS2PText className="text-[#ff6f61] text-[8px]">
                       CAMERA
-                    </Text>
+                    </PS2PText>
                   </Pressable>
                 </View>
               )}
@@ -451,33 +452,33 @@ export default function KYCScreen() {
                 className={`p-4 border-2 border-[#ff6f61] ${isLoading || kycData.status === 'submitted' ? 'opacity-50' : ''}`}
                 style={{ shadowColor: '#ff6f61', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.5, shadowRadius: 10 }}
               >
-                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-xs text-center">
+                <PS2PText className="text-white text-xs text-center">
                   {isLoading ? 'SUBMITTING...' : 
                    kycData.status === 'submitted' ? 'PENDING REVIEW' : 
                    'SUBMIT FOR VERIFICATION'}
-                </Text>
+                </PS2PText>
               </LinearGradient>
             </Pressable>
 
             {kycData.status === 'submitted' && (
-              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[8px] text-center mb-8">
+              <PS2PText className="text-[#b39eb5] text-[8px] text-center mb-8">
                 REVIEW TAKES 1-2 MINUTES
-              </Text>
+              </PS2PText>
             )}
           </>
         )}
 
         {/* Info Box */}
         <View className="border-2 border-[#8a2be2] p-4 mb-8">
-          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[8px] mb-2">
+          <PS2PText className="text-[#ff6f61] text-[8px] mb-2">
             🔐 PRIVACY FIRST
-          </Text>
-          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[6px]">
+          </PS2PText>
+          <PS2PText className="text-[#b39eb5] text-[6px]">
             • IMAGES PROCESSED LOCALLY{'\n'}
             • NO DATA PERMANENTLY STORED{'\n'}
             • ONLY STATUS SAVED{'\n'}
             • DEMO: SIMULATED VERIFICATION
-          </Text>
+          </PS2PText>
         </View>
       </ScrollView>
 
