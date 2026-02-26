@@ -67,3 +67,37 @@ export type AttestationRequest = {
   requestedAt: number
   respondedAt?: number
 }
+
+export type RentalHistory = {
+  id: string
+  address: string
+  landlord: string
+  landlordWallet: string
+  startDate: string
+  endDate?: string
+  monthlyRent: number
+  paymentsMade: number
+  totalMonths: number
+  attested: boolean
+}
+
+export type PropertyAttestation = {
+  id: string
+  type: 'rental' | 'ownership' | 'payment'
+  predicate: string
+  issuer: string
+  issuerWallet: string
+  issuedAt: number
+  validUntil: number
+}
+
+export type Document = {
+  id: string
+  type: 'passport' | 'drivers_license' | 'birth_certificate' | 'diploma' | 'other'
+  name: string
+  issuer: string
+  issuedAt: string
+  expiresAt?: string
+  imageUri?: string
+  verified: boolean
+}
