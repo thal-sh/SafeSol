@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
-import { Text, View, ScrollView, TextInput, Pressable } from 'react-native'
+import { View, ScrollView, Pressable } from 'react-native'
+import { PS2PText } from '../components/PS2PText'
+import PS2PTextInput from '../components/PS2PTextInput'
 import { router } from 'expo-router'
 import { useMobileWallet } from '@wallet-ui/react-native-kit'
 import { StatusBar } from 'expo-status-bar'
@@ -246,9 +248,9 @@ export default function MedicalScreen() {
   if (!account) {
     return (
       <LinearGradient colors={['#0a0a1f', '#1a1a2f']} className="flex-1 items-center justify-center">
-        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-xs">
+        <PS2PText className="text-white text-xs">
           CONNECT WALLET
-        </Text>
+        </PS2PText>
       </LinearGradient>
     )
   }
@@ -264,43 +266,42 @@ export default function MedicalScreen() {
             <View className="mr-2">
               <PixelIcon name="health" color="#ff6f61" size={24} />
             </View>
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-lg">
+            <PS2PText className="text-white text-lg">
               HEALTH
-            </Text>
+            </PS2PText>
           </View>
-          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#a0a0b0] text-[8px]">
+          <PS2PText className="text-[#a0a0b0] text-[8px]">
             ENCRYPTED • DEVICE ONLY
-          </Text>
+          </PS2PText>
           {medicalInfo.lastUpdated && (
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#4a4a6a] text-[6px] mt-2">
+            <PS2PText className="text-[#4a4a6a] text-[6px] mt-2">
               UPDATED: {new Date(medicalInfo.lastUpdated).toLocaleDateString().toUpperCase()}
-            </Text>
+            </PS2PText>
           )}
         </View>
 
         {/* Allergies */}
         <View className="mb-4">
-          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-xs mb-2">
+          <PS2PText className="text-white text-xs mb-2">
             ALLERGIES
-          </Text>
+          </PS2PText>
           <View className="bg-[#1a1a2f] p-1">
-            <TextInput
+            <PS2PTextInput
               className="p-3 text-white text-xs"
               placeholder="PENICILLIN, PEANUTS, LATEX"
               placeholderTextColor="#4a4a6a"
               value={medicalInfo.allergies}
               onChangeText={(text) => setMedicalInfo({...medicalInfo, allergies: text})}
               multiline
-              style={{ fontFamily: 'PressStart2P_400Regular' }}
             />
           </View>
         </View>
 
         {/* Blood Type */}
         <View className="mb-4">
-          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-xs mb-2">
+          <PS2PText className="text-white text-xs mb-2">
             BLOOD TYPE
-          </Text>
+          </PS2PText>
           <View className="bg-[#1a1a2f]">
             <Picker
               selectedValue={medicalInfo.bloodType}
@@ -324,37 +325,36 @@ export default function MedicalScreen() {
         {/* Medical Conditions */}
         <View className="mb-4">
           <View className="flex-row justify-between items-center mb-2">
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-xs">
+            <PS2PText className="text-white text-xs">
               CONDITIONS
-            </Text>
+            </PS2PText>
             <Pressable onPress={addCondition} className="bg-[#1a1a2f] px-3 py-2">
-              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-[8px]">
+              <PS2PText className="text-white text-[8px]">
                 + ADD
-              </Text>
+              </PS2PText>
             </Pressable>
           </View>
 
           {medicalInfo.conditions.map((condition, index) => (
             <View key={index} className="bg-[#1a1a2f] p-3 mb-2">
               <View className="flex-row justify-between mb-2">
-                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#a0a0b0] text-[6px]">
+                <PS2PText className="text-[#a0a0b0] text-[6px]">
                   CONDITION {index + 1}
-                </Text>
+                </PS2PText>
                 <Pressable onPress={() => removeCondition(index)}>
-                  <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[6px]">
+                  <PS2PText className="text-[#ff6f61] text-[6px]">
                     REMOVE
-                  </Text>
+                  </PS2PText>
                 </Pressable>
               </View>
               
               <View className="bg-[#0a0a1f] mb-2">
-                <TextInput
+                <PS2PTextInput
                   className="p-2 text-white text-[8px]"
                   placeholder="CONDITION NAME"
                   placeholderTextColor="#4a4a6a"
                   value={condition.name}
                   onChangeText={(text) => updateCondition(index, 'name', text)}
-                  style={{ fontFamily: 'PressStart2P_400Regular' }}
                 />
               </View>
               
@@ -367,9 +367,9 @@ export default function MedicalScreen() {
                       onPress={() => updateCondition(index, 'severity', severity)}
                       className={`px-3 py-2 ${style.container}`}
                     >
-                      <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className={`text-[6px] ${style.text}`}>
+                      <PS2PText className={`text-[6px] ${style.text}`}>
                         {severity.toUpperCase()}
-                      </Text>
+                      </PS2PText>
                     </Pressable>
                   )
                 })}
@@ -381,60 +381,57 @@ export default function MedicalScreen() {
         {/* Emergency Contacts */}
         <View className="mb-8">
           <View className="flex-row justify-between items-center mb-2">
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-xs">
+            <PS2PText className="text-white text-xs">
               EMERGENCY CONTACTS
-            </Text>
+            </PS2PText>
             <Pressable onPress={addContact} className="bg-[#1a1a2f] px-3 py-2">
-              <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-[8px]">
+              <PS2PText className="text-white text-[8px]">
                 + ADD
-              </Text>
+              </PS2PText>
             </Pressable>
           </View>
 
           {medicalInfo.emergencyContacts.map((contact, index) => (
             <View key={index} className="bg-[#1a1a2f] p-3 mb-3">
               <View className="flex-row justify-between mb-2">
-                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#a0a0b0] text-[6px]">
+                <PS2PText className="text-[#a0a0b0] text-[6px]">
                   CONTACT {index + 1}
-                </Text>
+                </PS2PText>
                 <Pressable onPress={() => removeContact(index)}>
-                  <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[6px]">
+                  <PS2PText className="text-[#ff6f61] text-[6px]">
                     REMOVE
-                  </Text>
+                  </PS2PText>
                 </Pressable>
               </View>
 
               <View className="bg-[#0a0a1f] mb-2">
-                <TextInput
+                <PS2PTextInput
                   className="p-2 text-white text-[8px]"
                   placeholder="FULL NAME *"
                   placeholderTextColor="#4a4a6a"
                   value={contact.name}
                   onChangeText={(text) => updateContact(index, 'name', text)}
-                  style={{ fontFamily: 'PressStart2P_400Regular' }}
                 />
               </View>
 
               <View className="bg-[#0a0a1f] mb-2">
-                <TextInput
+                <PS2PTextInput
                   className="p-2 text-white text-[8px]"
                   placeholder="PHONE NUMBER *"
                   placeholderTextColor="#4a4a6a"
                   value={contact.phone}
                   onChangeText={(text) => updateContact(index, 'phone', text)}
                   keyboardType="phone-pad"
-                  style={{ fontFamily: 'PressStart2P_400Regular' }}
                 />
               </View>
 
               <View className="bg-[#0a0a1f]">
-                <TextInput
+                <PS2PTextInput
                   className="p-2 text-white text-[8px]"
                   placeholder="RELATIONSHIP"
                   placeholderTextColor="#4a4a6a"
                   value={contact.relationship}
                   onChangeText={(text) => updateContact(index, 'relationship', text)}
-                  style={{ fontFamily: 'PressStart2P_400Regular' }}
                 />
               </View>
             </View>
@@ -448,9 +445,9 @@ export default function MedicalScreen() {
           className="mb-8"
         >
           <View className={`bg-[#ff6f61] p-4 ${isLoading ? 'opacity-50' : ''}`}>
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-xs text-center">
+            <PS2PText className="text-white text-xs text-center">
               {isLoading ? 'SAVING...' : 'SAVE MEDICAL INFO'}
-            </Text>
+            </PS2PText>
           </View>
         </Pressable>
       </ScrollView>

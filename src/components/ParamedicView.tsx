@@ -1,5 +1,6 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View } from 'react-native'
+import PS2PText from './PS2PText'
 import { MedicalInfo } from '../types'
 
 type Props = {
@@ -10,18 +11,18 @@ export function ParamedicView({ info }: Props) {
   if (!info) {
     return (
       <View className="p-6">
-        <Text className="text-gray-600">No medical info available</Text>
+        <PS2PText className="text-gray-600">No medical info available</PS2PText>
       </View>
     )
   }
 
   return (
     <View className="p-6">
-      <Text className="font-bold text-lg mb-2">Medical Information</Text>
-      <Text className="mb-1">Allergies: {info.allergies}</Text>
-      <Text className="mb-1">Blood Type: {info.bloodType}</Text>
-      <Text className="mb-1">Conditions: {info.conditions}</Text>
-      <Text className="mb-1">Emergency Contact: {info.emergencyContactName} — {info.emergencyContactPhone}</Text>
+      <PS2PText className="font-bold text-lg mb-2">Medical Information</PS2PText>
+      <PS2PText className="mb-1">Allergies: {info.allergies}</PS2PText>
+      <PS2PText className="mb-1">Blood Type: {info.bloodType}</PS2PText>
+      <PS2PText className="mb-1">Conditions: {info.conditions}</PS2PText>
+      <PS2PText className="mb-1">Emergency Contact: {info.emergencyContactName} — {info.emergencyContactPhone}</PS2PText>
     </View>
   )
 }

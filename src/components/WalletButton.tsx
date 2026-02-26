@@ -1,6 +1,7 @@
-import { Pressable, Text } from 'react-native'
+import { Pressable } from 'react-native'
 import { useMobileWallet } from '@wallet-ui/react-native-kit'
 import { LinearGradient } from 'expo-linear-gradient'
+import { PS2PText } from './PS2PText'
 
 export function WalletButton() {
   const { account, connect, disconnect } = useMobileWallet()
@@ -13,9 +14,9 @@ export function WalletButton() {
           className="px-6 py-3 border-2 border-[#ff1493]"
           style={{ shadowColor: '#ff1493', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.5, shadowRadius: 10 }}
         >
-          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-xs">
+          <PS2PText className="text-white text-xs">
             DISCONNECT
-          </Text>
+          </PS2PText>
         </LinearGradient>
       </Pressable>
     )
@@ -30,9 +31,9 @@ export function WalletButton() {
         className="px-8 py-4 border-2 border-[#ff6f61]"
         style={{ shadowColor: '#ff6f61', shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.5, shadowRadius: 15 }}
       >
-        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-sm">
+        <PS2PText className="text-white text-sm">
           CONNECT WALLET
-        </Text>
+        </PS2PText>
       </LinearGradient>
     </Pressable>
   )

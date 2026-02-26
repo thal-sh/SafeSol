@@ -1,4 +1,5 @@
-import { Pressable, Text, View } from 'react-native'
+import { Pressable, View } from 'react-native'
+import { PS2PText } from './PS2PText'
 import { LinearGradient } from 'expo-linear-gradient'
 
 type Props = {
@@ -52,26 +53,26 @@ export function StatusCard({ title, description, status, isComplete, onPress, ac
         style={{ shadowColor: colors.glow, shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.5, shadowRadius: 10 }}
       >
         <View className="flex-row justify-between items-center mb-3">
-          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-sm">
+          <PS2PText className="text-[#ffd9b3] text-sm">
             {title}
-          </Text>
+          </PS2PText>
           <View className={`px-2 py-1 border ${colors.border}`}>
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className={`text-[8px] ${colors.text}`}>
+            <PS2PText className={`text-[8px] ${colors.text}`}>
               {status === 'saved' ? '✓ SAVED' : 
                status === 'verified' ? '✓ VERIFIED' :
                status === 'ready' ? '⚡ READY' :
                status === 'pending' ? '⏳ WAIT' :
                status === 'not set' ? '○ NEW' :
                status === 'locked' ? '🔒 LOCKED' : status}
-            </Text>
+            </PS2PText>
           </View>
         </View>
-        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[10px] mb-4 leading-4">
+        <PS2PText className="text-[#b39eb5] text-[10px] mb-4 leading-4">
           {description}
-        </Text>
-        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className={`${colors.text} text-[10px]`}>
+        </PS2PText>
+        <PS2PText className={`${colors.text} text-[10px]"}>
           {actionText}
-        </Text>
+        </PS2PText>
       </LinearGradient>
     </Pressable>
   )
