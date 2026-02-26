@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar'
 import * as ImagePicker from 'expo-image-picker'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Toast from 'react-native-toast-message'
+import { PixelIcon } from '../../components/PixelIcon'
 
 type Document = {
   id: string
@@ -16,6 +17,80 @@ type Document = {
   expiresAt?: string
   imageUri?: string
   verified: boolean
+}
+
+// Category Filter Button
+const CategoryButton = ({ label, selected, onPress }: { label: string; selected: boolean; onPress: () => void }) => (
+  <Pressable
+    onPress={onPress}
+    className={`mr-2 px-3 py-2 ${selected ? 'bg-[#ff6f61]' : 'bg-[#1a1a2f]'}`}
+  >
+    <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className={`text-[8px] ${selected ? 'text-white' : 'text-[#a0a0b0]'}`}>
+      {label}
+    </Text>
+  </Pressable>
+)
+
+// Document Card Component
+const DocumentCard = ({ document }: { document: Document }) => {
+  const getCategoryIcon = (type: string) => {
+    switch(type) {
+      case 'passport': return '🛂'
+      case 'drivers_license': return '🪪'
+      case 'birth_certificate': return '👶'
+      case 'diploma': return '🎓'
+      default: return '📄'
+    }
+  }
+
+  return (
+    <View className="bg-[#1a1a2f] p-3 mb-3">
+      <View className="flex-row">
+        <View className="mr-3 w-10 h-10 items-center justify-center bg-[#0a0a1f]">
+          <Text className="text-2xl">{getCategoryIcon(document.type)}</Text>
+        </View>
+        
+        <View className="flex-1">
+          <View className="flex-row justify-between items-start">
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-[8px] flex-1">
+              {document.name}
+            </Text>
+            {document.verified ? (
+              <View className="bg-[#00ff9d] px-2 py-1 ml-2">
+                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#0a0a1f] text-[4px]">
+                  VERIFIED
+                </Text>
+              </View>
+            ) : (
+              <View className="bg-[#2a2a3f] px-2 py-1 ml-2">
+                <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#a0a0b0] text-[4px]">
+                  UNVERIFIED
+                </Text>
+              </View>
+            )}
+          </View>
+          
+          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#a0a0b0] text-[6px] mt-1">
+            ISSUER: {document.issuer}
+          </Text>
+          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#a0a0b0] text-[6px]">
+            ISSUED: {document.issuedAt}
+          </Text>
+          {document.expiresAt && (
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[6px]">
+              EXPIRES: {document.expiresAt}
+            </Text>
+          )}
+        </View>
+      </View>
+      
+      {document.imageUri && (
+        <View className="mt-3 bg-[#0a0a1f] p-2">
+          <Image source={{ uri: document.imageUri }} className="w-full h-40" resizeMode="contain" />
+        </View>
+      )}
+    </View>
+  )
 }
 
 export default function DocumentsTab() {
@@ -30,7 +105,6 @@ export default function DocumentsTab() {
   }, [account])
 
   useEffect(() => {
-    // Request permissions
     (async () => {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
       if (status !== 'granted') {
@@ -63,7 +137,6 @@ export default function DocumentsTab() {
       })
 
       if (!result.canceled && result.assets[0]) {
-        // In real app, you'd encrypt this
         const newDoc: Document = {
           id: Date.now().toString(),
           type: 'other',
@@ -95,29 +168,28 @@ export default function DocumentsTab() {
     }
   }
 
-  const categories = ['all', 'passport', 'drivers_license', 'birth_certificate', 'diploma', 'other']
-  
+  const categories = ['all', 'passport', 'license', 'birth', 'diploma', 'other']
   const filteredDocs = selectedCategory === 'all' 
     ? documents 
-    : documents.filter(d => d.type === selectedCategory)
-
-  const getCategoryIcon = (type: string) => {
-    switch(type) {
-      case 'passport': return '🛂'
-      case 'drivers_license': return '🪪'
-      case 'birth_certificate': return '👶'
-      case 'diploma': return '🎓'
-      default: return '📄'
-    }
-  }
+    : documents.filter(d => {
+        if (selectedCategory === 'license') return d.type === 'drivers_license'
+        if (selectedCategory === 'birth') return d.type === 'birth_certificate'
+        if (selectedCategory === 'diploma') return d.type === 'diploma'
+        return d.type === selectedCategory
+      })
 
   return (
-    <LinearGradient colors={['#0a0a1f', '#1a0f2e', '#000000']} className="flex-1">
+    <LinearGradient colors={['#0a0a1f', '#1a1a2f']} className="flex-1">
       {/* Header */}
-      <View className="pt-12 px-4 pb-4 border-b-2 border-[#6a0dad] flex-row justify-between items-center">
-        <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-lg">
-          📜 DOCUMENTS
-        </Text>
+      <View className="pt-12 px-4 pb-4 border-b border-[#2a2a3f] flex-row justify-between items-center">
+        <View className="flex-row items-center">
+          <View className="mr-2">
+            <PixelIcon name="document" color="#ff6f61" size={24} />
+          </View>
+          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-white text-lg">
+            DOCUMENTS
+          </Text>
+        </View>
         <Pressable onPress={pickDocument}>
           <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-xs">
             + ADD
@@ -126,84 +198,45 @@ export default function DocumentsTab() {
       </View>
 
       {/* Category Filters */}
-      <ScrollView horizontal className="px-4 py-3 border-b border-[#6a0dad]">
+      <ScrollView horizontal className="px-4 py-3 border-b border-[#2a2a3f]">
         {categories.map((cat) => (
-          <Pressable
+          <CategoryButton
             key={cat}
+            label={cat.toUpperCase()}
+            selected={selectedCategory === cat}
             onPress={() => setSelectedCategory(cat)}
-            className={`mr-2 px-3 py-1 border ${selectedCategory === cat ? 'border-[#ff6f61]' : 'border-[#6a0dad]'}`}
-          >
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className={`text-[8px] ${selectedCategory === cat ? 'text-[#ff6f61]' : 'text-[#b39eb5]'}`}>
-              {cat.toUpperCase()}
-            </Text>
-          </Pressable>
+          />
         ))}
       </ScrollView>
 
       <ScrollView className="flex-1 px-4 pt-4">
         {filteredDocs.length === 0 ? (
-          <View className="border-2 border-[#6a0dad] p-8 items-center">
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-xs text-center mb-2">
+          <View className="bg-[#1a1a2f] p-8 items-center">
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#a0a0b0] text-xs text-center mb-2">
               NO DOCUMENTS
             </Text>
-            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#4a2c5a] text-[8px] text-center">
+            <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#4a4a6a] text-[8px] text-center">
               TAP + TO ADD YOUR FIRST DOCUMENT
             </Text>
           </View>
         ) : (
           filteredDocs.map((doc) => (
-            <View key={doc.id} className="border-2 border-[#8a2be2] p-3 mb-3">
-              <View className="flex-row">
-                <Text className="text-3xl mr-3">{getCategoryIcon(doc.type)}</Text>
-                <View className="flex-1">
-                  <View className="flex-row justify-between">
-                    <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ffd9b3] text-[8px] flex-1">
-                      {doc.name}
-                    </Text>
-                    {doc.verified ? (
-                      <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#00ff9d] text-[6px]">
-                        ✓ VERIFIED
-                      </Text>
-                    ) : (
-                      <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#8a2be2] text-[6px]">
-                        ○ UNVERIFIED
-                      </Text>
-                    )}
-                  </View>
-                  <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[6px] mt-1">
-                    ISSUER: {doc.issuer}
-                  </Text>
-                  <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[6px]">
-                    ISSUED: {doc.issuedAt}
-                  </Text>
-                  {doc.expiresAt && (
-                    <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#ff6f61] text-[6px]">
-                      EXPIRES: {doc.expiresAt}
-                    </Text>
-                  )}
-                </View>
-              </View>
-              {doc.imageUri && (
-                <View className="mt-2 border border-[#6a0dad] p-1">
-                  <Image source={{ uri: doc.imageUri }} className="w-full h-32" resizeMode="contain" />
-                </View>
-              )}
-            </View>
+            <DocumentCard key={doc.id} document={doc} />
           ))
         )}
 
         {/* Storage Info */}
-        <View className="border-2 border-[#00ff9d] p-3 mt-4 mb-8">
+        <View className="bg-[#1a1a2f] p-4 mt-4 mb-8">
           <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#00ff9d] text-[8px] text-center">
             🔐 ENCRYPTED STORAGE
           </Text>
-          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#b39eb5] text-[6px] text-center mt-1">
+          <Text style={{ fontFamily: 'PressStart2P_400Regular' }} className="text-[#a0a0b0] text-[6px] text-center mt-2">
             DOCUMENTS ARE ENCRYPTED AND STORED ONLY ON YOUR DEVICE
           </Text>
         </View>
       </ScrollView>
 
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
     </LinearGradient>
   )
 }
