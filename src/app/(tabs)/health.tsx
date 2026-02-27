@@ -74,43 +74,28 @@ export default function HealthTab() {
         </PS2PText>
 
         <QuickAction
-          icon={<PS2PText className="text-2xl">💊</PS2PText>}
-          title="MEDICATIONS"
-          subtitle="Add prescriptions & reminders"
-          onPress={() => router.push('/medications')} // Will navigate when screen exists
-          layout="horizontal"
-        />
-
-        <QuickAction
-          icon={<PS2PText className="text-2xl">💉</PS2PText>}
-          title="VACCINATIONS"
-          subtitle="Store COVID, flu, etc."
-          onPress={() => router.push('/vaccinations')} // Will navigate when screen exists
+          icon={<PS2PText className="text-2xl">�</PS2PText>}
+          title="EMERGENCY CONTACTS"
+          subtitle="Add/manage contacts"
+          onPress={() => router.push('/emergency-contacts')}
           layout="horizontal"
         />
 
         <QuickAction
           icon={<PS2PText className="text-2xl">🏥</PS2PText>}
-          title="DOCTOR VISITS"
-          subtitle="Appointment history"
-          onPress={() => router.push('/doctor-visits')} // Will navigate when screen exists
+          title="CONDITIONS"
+          subtitle="Manage medical conditions"
+          onPress={() => router.push('/conditions')}
           layout="horizontal"
         />
 
         <QuickAction
-          icon={<PS2PText className="text-2xl">🩺</PS2PText>}
-          title="INSURANCE"
-          subtitle="Cards & policies"
-          onPress={() => router.push('/insurance')} // Will navigate when screen exists
+          icon={<PS2PText className="text-2xl">🆘</PS2PText>}
+          title="EMERGENCY QR"
+          subtitle="Scannable health data"
+          onPress={() => router.push('/qr')}
           layout="horizontal"
         />
-
-        {/* Coming Soon Note */}
-        <View className="mt-4 mb-8">
-          <PS2PText className="text-[#4a4a6a] text-[6px] text-center">
-            MORE HEALTH FEATURES COMING SOON
-          </PS2PText>
-        </View>
       </ScrollView>
 
       <StatusBar style="light" />

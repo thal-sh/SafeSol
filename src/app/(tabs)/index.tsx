@@ -34,6 +34,7 @@ export default function Home() {
   const kycPercent = kycVerified ? 100 : medicalData ? 50 : 0
   const financialPercent = attestationsCount > 0 ? Math.min(attestationsCount * 20, 100) : 0
   const propertyPercent = 90 // mock data
+  const profilePercent = Math.round((medicalPercent + kycPercent + financialPercent + propertyPercent) / 4)
 
   if (!account) {
     return (
@@ -59,6 +60,9 @@ export default function Home() {
         <View className="mb-4">
           <PS2PText className="text-white text-sm">
             YOUR LIFE AT A GLANCE
+          </PS2PText>
+          <PS2PText className="text-[#00ff9d] text-xs mt-1">
+            PROFILE COMPLETE: {profilePercent}%
           </PS2PText>
         </View>
 
@@ -107,9 +111,9 @@ export default function Home() {
             onPress={() => router.push('/qr')} 
           />
           <QuickAction 
-            icon={<PixelIcon name="qr" color="#00ff9d" size={20} />} 
-            label="SCAN" 
-            onPress={() => router.push('/attestations/scan')} 
+            icon={<PS2PText className="text-xl">📋</PS2PText>} 
+            label="REQUEST" 
+            onPress={() => router.push('/proof-request')} 
           />
           <QuickAction 
             icon={<PixelIcon name="document" color="#8a2be2" size={20} />} 

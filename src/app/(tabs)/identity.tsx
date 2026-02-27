@@ -54,6 +54,16 @@ export default function IdentityTab() {
       </View>
 
       <ScrollView className="flex-1 px-4 pt-4">
+        {/* Document Vault Link */}
+        <Pressable 
+          onPress={() => router.push('/document-vault')}
+          className="bg-[#8a2be2] p-4 mb-4"
+        >
+          <PS2PText className="text-white text-xs text-center font-bold">
+            🗂️ DOCUMENT VAULT
+          </PS2PText>
+        </Pressable>
+
         {/* KYC Status */}
         <View className="bg-[#1a1a2f] p-4 mb-4">
           <View className="flex-row justify-between items-center mb-2">
