@@ -11,6 +11,7 @@ import { QuickAction } from '../../components/QuickAction'
 import { ActivityItem } from '../../components/ActivityItem'
 import { PS2PText } from '../../components/PS2PText'
 import { useAccountStatus } from '../../hooks/useAccountStatus'
+import { useMobileWallet } from '@wallet-ui/react-native-kit'
 
 export default function Home() {
   const {
@@ -21,12 +22,23 @@ export default function Home() {
     attestationsCount,
     reload,
   } = useAccountStatus()
+  const walletAny = useMobileWallet() as any
   const [refreshing, setRefreshing] = useState(false)
 
   const onRefresh = async () => {
     setRefreshing(true)
     await reload()
     setRefreshing(false)
+  }
+
+  const handleDisconnect = async () => {
+    try {
+      if (walletAny.disconnect) {
+        await walletAny.disconnect()
+      }
+    } catch (e) {
+      console.log('disconnect error', e)
+    }
   }
 
   // Calculate percentages based on status hook
@@ -50,7 +62,7 @@ export default function Home() {
 
   return (
     <LinearGradient colors={['#0a0a1f', '#1a1a2f']} className="flex-1">
-      <Header address={account.address.toString()} />
+      <Header address={account.address.toString()} onDisconnect={handleDisconnect} />
 
       <ScrollView
         className="flex-1 px-4 pt-4"

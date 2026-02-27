@@ -10,6 +10,8 @@ import { Header } from '../components/Header'
 import { PixelIcon } from '../components/PixelIcon'
 import { PS2PText } from '../components/PS2PText'
 import { useCallback } from 'react'
+import * as Crypto from 'expo-crypto'
+import { buildMemoTransaction } from '../utils/anchor'
 
 type ReceivedAttestation = {
   id: string
@@ -22,10 +24,13 @@ type ReceivedAttestation = {
   status: 'pending' | 'approved' | 'rejected'
   approvedAt?: number
   rejectionReason?: string
+  anchoredTx?: string
+  anchoredAt?: number
 }
 
 export default function AttestationIssueScreen() {
-  const { account } = useMobileWallet()
+  const walletAny = useMobileWallet() as any
+  const { account } = walletAny
   const [receivedRequests, setReceivedRequests] = useState<ReceivedAttestation[]>([])
   const [issuedAttestations, setIssuedAttestations] = useState<ReceivedAttestation[]>([])
   const [activeTab, setActiveTab] = useState<'pending' | 'issued'>('pending')
@@ -77,6 +82,56 @@ export default function AttestationIssueScreen() {
       // Update local state
       setReceivedRequests(receivedRequests.filter(r => r.id !== request.id))
       setIssuedAttestations([approved, ...issuedAttestations])
+
+      // Save issued attestation separately for potential anchoring
+      try {
+        const keyIssued = `issued_attestations_${account.address.toString()}`
+        const existingIssued = await AsyncStorage.getItem(keyIssued)
+        const issuedAll: ReceivedAttestation[] = existingIssued ? JSON.parse(existingIssued) : []
+        issuedAll.unshift(approved)
+        await AsyncStorage.setItem(keyIssued, JSON.stringify(issuedAll))
+      } catch (e) {
+        console.log('failed to persist issued attestation', e)
+      }
+
+      // Attempt to anchor a hash of the attestation on-chain via Memo program
+      try {
+        const payload = JSON.stringify(approved)
+        const hash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, payload)
+        const { tx, connection } = await buildMemoTransaction(hash, account.address.toString())
+
+        let signature: string | null = null
+        // prefer wallets that provide signAndSendTransaction
+        if (walletAny.signAndSendTransaction) {
+          const res = await walletAny.signAndSendTransaction({ transaction: tx, connection })
+          signature = res?.signature || res
+        } else if (walletAny.signTransaction) {
+          const signed = await walletAny.signTransaction(tx)
+          const raw = signed.serialize()
+          signature = await connection.sendRawTransaction(raw)
+          await connection.confirmTransaction(signature)
+        }
+
+        if (signature) {
+          // persist anchoring metadata to issued list
+          try {
+            const keyIssued = `issued_attestations_${account.address.toString()}`
+            const existingIssued = await AsyncStorage.getItem(keyIssued)
+            const issuedAll: ReceivedAttestation[] = existingIssued ? JSON.parse(existingIssued) : []
+            // update the first matching id in issuedAll
+            const updated = issuedAll.map(it => it.id === approved.id ? { ...it, anchoredTx: signature, anchoredAt: Date.now() } : it)
+            await AsyncStorage.setItem(keyIssued, JSON.stringify(updated))
+          } catch (e) {
+            console.log('failed to persist anchoring metadata', e)
+          }
+
+          Toast.show({ type: 'success', text1: 'ANCHOR SENT', text2: signature, position: 'top', visibilityTime: 2500 })
+        } else {
+          Toast.show({ type: 'info', text1: 'ANCHOR SKIPPED', text2: 'Wallet does not support on-chain send', position: 'top', visibilityTime: 2500 })
+        }
+      } catch (e) {
+        console.log('anchoring failed', e)
+      }
 
       Toast.show({
         type: 'success',
@@ -149,6 +204,16 @@ export default function AttestationIssueScreen() {
     return emojis[type] || '📄'
   }
 
+  const handleDisconnect = async () => {
+    try {
+      if (walletAny.disconnect) {
+        await walletAny.disconnect()
+      }
+    } catch (e) {
+      console.log('disconnect error', e)
+    }
+  }
+
   if (!account) {
     return (
       <LinearGradient colors={['#0a0a1f', '#1a1a2f']} className="flex-1 items-center justify-center">
@@ -159,7 +224,7 @@ export default function AttestationIssueScreen() {
 
   return (
     <LinearGradient colors={['#0a0a1f', '#1a1a2f']} className="flex-1">
-      <Header address={account.address.toString()} />
+      <Header address={account.address.toString()} onDisconnect={handleDisconnect} />
       
       <ScrollView className="flex-1 px-4 pt-4">
         <View className="mb-6">
