@@ -3,47 +3,41 @@
 A privacy-first LIFE DATA VAULT app built for Solana Mobile. Store your critical medical, finance, property and identity information securely on your device and access it instantly in emergencies.
 
 ### 🏥 **HEALTH VAULT**
-- Store allergies, blood type, and medical conditions
-- Multiple emergency contacts with phone numbers
-- Condition severity tracking (mild/moderate/severe)
-- Medication reminders & prescriptions
-- Vaccination records
-- Insurance cards (encrypted)
-- Doctor visit history
+- Store allergies, blood type, medical conditions
+- Add/edit emergency contacts (phone call from QR)
+- Track condition severity (mild/moderate/severe)
+- Emergency QR mode for paramedics
+- Medication reminders & prescriptions (future)
+- Vaccination records (future)
+- Insurance cards & doctor visits (future)
 
 ### 💼 **FINANCIAL VAULT**
-- Income proofs from employers (ZK-ready)
-- Employment contracts
-- Loan agreements
-- Investment proofs
-- Tax records
-- Multi-employment history
-- Gig economy earnings (Uber, etc.)
+- Request proofs from employers, landlords, schools, etc.
+- Scan or receive attestations and store locally
+- View verified income proofs with expiration
+- Export all proofs to share externally
+- Review pending requests and issue attestations
+- Manage employment contracts, loan agreements
 
 ### 🏠 **PROPERTY VAULT**
-- Rental history with landlord verification
-- Lease agreements
-- Owned property deeds
-- Rent payment proofs ("12 months paid")
-- Utility bills
-- Maintenance requests
-- HOA documents
+- Manually log rental history
+- Request landlord verification via proof flow
+- Lease agreements and payment tracking
+- Proofs like “paid 12 months rent” for credit apps
+- Future: deeds, utility bills, maintenance docs
 
 ### 🆔 **IDENTITY VAULT**
-- KYC verification status
-- Age proofs (over 18/21/65) without revealing DOB
-- Nationality/residency
-- Professional licenses
-- University degrees
-- Memberships & certifications
+- KYC status (pending/verified)
+- Age proofs without revealing DOB
+- Store credentials & professional licenses
+- Link to document vault for secure storage
 
-### 📜 **DOCUMENTS VAULT**
-- Passport (encrypted)
-- Driver's license
-- Birth certificate
-- Marriage certificate
-- Diplomas & transcripts
-- Certificates
+### 📜 **DOCUMENT VAULT**
+- Store scanned documents (passport, ID, diploma, etc.)
+- Metadata: issuer, issue/expiry dates
+- Expiry warnings and share/delete controls
+- All files encrypted and device‑only
+
 
 ### 🚑 **EMERGENCY QR**
 - Generate QR with medical data
@@ -101,11 +95,16 @@ The app will open on your connected Android device or emulator.
    - Upload ID document (from gallery or camera)
    - Take a selfie
    - Submit for verification (simulated)
-4. **Generate QR** - Once medical info is saved, go to QR screen to:
+4. **Build Out Your Vaults**
+   - Use **Finance** tab to request income/lease proofs, scan or receive attestations, and export them.
+   - Use **Property** tab for rental history and send verification requests to landlords.
+   - Use **Identity** tab to view KYC/age status and open the Document Vault for secure file storage.
+5. **Check Your Profile** - Home screen shows a completion percentage so you know which sections still need setup.
+6. **Generate QR** - Once medical info is saved, go to QR screen to:
    - Generate your emergency QR code
    - Follow instructions to set as lock screen wallpaper
    - Test emergency mode with "Emergency Mode" button
-5. **Emergency Access** - In an emergency, first responders can:
+7. **Emergency Access** - In an emergency, first responders can:
    - Scan QR from lock screen
    - View critical medical information in large text
    - Tap to call emergency contacts
